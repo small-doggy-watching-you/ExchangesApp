@@ -27,7 +27,8 @@ class CurrencyListViewController: UIViewController {
             }
         }
     }
-
+    
+    // 에러 출력 함수
     private func presentErrorAlert(message: String) {
         let alert = UIAlertController(title: "오류", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "확인", style: .default))

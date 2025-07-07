@@ -3,6 +3,7 @@ import UIKit
 
 import Alamofire
 
+// 에러 창 정의
 enum AlertFactory {
     static func errorAlert(message: String) -> UIAlertController {
         let alert = UIAlertController(title: "오류", message: message, preferredStyle: .alert)
@@ -11,6 +12,7 @@ enum AlertFactory {
     }
 }
 
+// 에러 메시지 판별
 enum ErrorMessageProvider {
     static func message(for error: Error) -> String {
         if let afError = error.asAFError {
