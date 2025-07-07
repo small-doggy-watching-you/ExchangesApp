@@ -6,41 +6,36 @@ import Then
 
 class CurrencyListViewController: UIViewController {
     
-    // 테스트
-    private lazy var button: UIButton = {
-        let button = UIButton()
-        button.setTitle("next text", for: .normal)
-        button.backgroundColor = .red
-        button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(buttonTapped), for: .touchDown)
-        return button
-    }()
+    
+    private let dataService = DataService()
+    private var currency: Currency?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("CurrencyListViewController")
+        
+        self.dataService.fetchData(){ [weak self] result in
+            guard let self else { return }
+            DispatchQueue.main.async {
+                self.currency = result
+                self.updateUI()
+            }
+        }
+        
         configureUI()
     }
     
-    
+    // 최초 UI 세팅
     private func configureUI() {
-        view.backgroundColor = .systemBlue
+        print("CurrencyListViewController configureUI")
+        view.backgroundColor = .systemBackground
         
-        [button].forEach {
-            view.addSubview( $0 )
-        }
-        
-        button.snp.makeConstraints {
-            $0.center.equalToSuperview()
-            $0.width.height.equalTo(250)
-            $0.height.equalTo(120)
-        }
     }
     
-    @objc
-    private func buttonTapped() {
-        self.navigationController?.pushViewController(CalculatorView(), animated: true)
+    // UI 업데이트 실행
+    private func updateUI() {
+        print(currency ?? "")
     }
+    
     
 }
 
