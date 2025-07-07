@@ -9,7 +9,13 @@ import UIKit
 
 class ViewController: UIViewController {
   
-  
+  private lazy var tableView: UITableView = {
+    let tableView = UITableView()
+    tableView.backgroundColor = .systemBackground
+    tableView.dataSource = self
+    tableView.delegate = self
+    tableView.register
+  }
   
   
   
@@ -44,6 +50,8 @@ class ViewController: UIViewController {
       }
     }.resume()
   }
+  
+  
   
 
 }
