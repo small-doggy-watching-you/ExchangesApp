@@ -9,7 +9,7 @@ class DataService {
     func fetchData(completion: @escaping (Result<Currency, Error>) -> Void) {
         let decoder = JSONDecoder()
 
-        // 파싱 떄 Date 타입 포매팅 설정 추가
+        // 파싱 할 때 Date 타입 포매팅 설정 추가
         let formatter = DateFormatter()
         formatter.dateFormat = "E, dd MMM yyyy HH:mm:ss Z"
         formatter.locale = Locale(identifier: "en_US_POSIX")
