@@ -1,12 +1,7 @@
-//
-//  CalculatorView.swift
-//  ExchangesApp
-//
-//  Created by Yoon on 7/7/25.
-//
+
+import UIKit
 
 import SnapKit
-import UIKit
 
 class CalculatorView: UIViewController {
     override func viewDidLoad() {
