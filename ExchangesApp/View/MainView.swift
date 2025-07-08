@@ -18,6 +18,12 @@ final class MainView: UIView {
     return label
   }()
   
+  let searchBar: UISearchBar = {
+    let searchBar = UISearchBar()
+    searchBar.searchTextField.backgroundColor = .systemBackground
+    return searchBar
+  }()
+  
   let tableView: UITableView = {
     let tableView = UITableView()
     tableView.backgroundColor = .systemBackground
@@ -37,18 +43,23 @@ final class MainView: UIView {
   private func setupUI() {
     backgroundColor = .systemBackground
     
-    [titleLabel, tableView].forEach {
+    [titleLabel, searchBar, tableView].forEach {
       addSubview( $0 )
     }
     
     titleLabel.snp.makeConstraints {
-      $0.top.equalTo(safeAreaLayoutGuide).offset(16)
-      $0.leading.trailing.equalToSuperview().inset(16)
+      $0.top.equalTo(safeAreaLayoutGuide)
+      $0.leading.trailing.equalTo(safeAreaLayoutGuide)
+    }
+    
+    searchBar.snp.makeConstraints {
+      $0.top.equalTo(safeAreaLayoutGuide)
+      $0.leading.trailing.equalToSuperview()
     }
     
     tableView.snp.makeConstraints {
-      $0.top.equalTo(titleLabel.snp.bottom)
-      $0.leading.trailing.equalToSuperview().inset(16)
+      $0.top.equalTo(searchBar.snp.bottom)
+      $0.leading.trailing.equalTo(safeAreaLayoutGuide)
       $0.bottom.equalToSuperview()
     }
   }

@@ -8,8 +8,6 @@
 // mvvm에서 뷰는 로직이 없어야 되고, 뷰모델은 UIKit이 없어야 한다.
 
 import UIKit
-import SnapKit
-import Alamofire
 
 class ViewController: UIViewController {
   
@@ -30,12 +28,12 @@ class ViewController: UIViewController {
   }
   
   private func fetchExchangeRate() {
-    exchangeRateService.fetchData { [weak self] (result: Result<ExchangeRate, AFError>) in
+    exchangeRateService.fetchSortedRates { [weak self] result in
       guard let self else { return }
       switch result {
-      case .success(let exchangeRate):
+      case .success(let sortedRates):
         DispatchQueue.main.async {
-          self.dataSource = exchangeRate.sortedRates
+          self.dataSource = sortedRates
           self.mainView.tableView.reloadData()
         }
       case .failure(let error):

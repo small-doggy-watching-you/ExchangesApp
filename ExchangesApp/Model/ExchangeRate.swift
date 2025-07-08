@@ -10,7 +10,6 @@ struct ExchangeRate: Codable {
   let timeNextUpdateUnix: Int
   let timeLastUpdateUTC: String
   let timeNextUpdateUTC: String
-  
   let rates: [String: Double]
   
   enum CodingKeys: String, CodingKey {
@@ -19,9 +18,5 @@ struct ExchangeRate: Codable {
     case timeLastUpdateUTC = "time_last_update_utc"
     case timeNextUpdateUTC = "time_next_update_utc"
     case rates
-  }
-  
-  var sortedRates: [(String, Double)] {
-    rates.sorted { $0.key < $1.key }
   }
 }
