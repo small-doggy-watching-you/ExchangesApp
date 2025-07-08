@@ -5,7 +5,13 @@ import SnapKit
 import Then
 
 final class CurrencyListView: UIView {
+    
     private var viewModel: CurrencyListViewModel?
+    private let searchBar = UISearchBar().then {
+        $0.searchTextField.backgroundColor = .systemGray6
+        $0.placeholder = "통화 검색"
+        $0.searchBarStyle = .default
+    }
     private let tableView = UITableView().then {
         $0.register(CurrencyListTableViewCell.self, forCellReuseIdentifier: CurrencyListTableViewCell.id)
     }
@@ -20,12 +26,19 @@ final class CurrencyListView: UIView {
         tableView.dataSource = self
         tableView.rowHeight = UITableView.automaticDimension // 자동 높이지정
         tableView.estimatedRowHeight = 40 // 예상 높이 (성능 최적화용)
-
+        
+        // 뷰에 주입
+        addSubview(searchBar)
         addSubview(tableView)
 
         // 오토 레이아웃
+        searchBar.snp.makeConstraints {
+            $0.top.equalTo(self.safeAreaLayoutGuide)
+            $0.leading.trailing.equalToSuperview()
+        }
         tableView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.top.equalTo(searchBar.snp.bottom)
+            $0.leading.trailing.bottom.equalTo(self.safeAreaLayoutGuide)
         }
 
         // 테이블 뷰 리로드 함수 실행
