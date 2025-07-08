@@ -1,6 +1,7 @@
 
 import Foundation
 
+// JSON 디코딩용 데이터 모델
 struct Currency: Codable {
     let timeLastUpdateUtc: Date
     let timeNextUpdateUtc: Date

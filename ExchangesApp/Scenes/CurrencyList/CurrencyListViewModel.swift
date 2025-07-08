@@ -2,18 +2,17 @@
 import Foundation
 
 class CurrencyListViewModel {
-    // 프로퍼티 선언부
     
-    var allItems: [CurrencyItem] = []
-    var sortedItems: [CurrencyItem] = []
-    private var currency: Currency?
+    // 프로퍼티 선언
+    var allItems: [CurrencyItem] = [] // 전체 아이템
+    var sortedItems: [CurrencyItem] = [] // 검색한 아이템
+    private var currency: Currency? // JSON 파싱 통째로 보존
     var numberOfItems: Int { sortedItems.count } // 테이블 뷰에서 사용할 셀 개수
     
+    // 클로저
     var onDataUpdated: (() -> Void)?
     
-    
-    // 객체 선언부
-    
+    // 객체 선언
     private let dataService = DataService()
     
     // 데이터 파싱 함수
@@ -24,11 +23,9 @@ class CurrencyListViewModel {
             case let .success(currency):
                 self.currency = currency
                 self.allItems = currency.rates.map { code, rate in
-                    CurrencyItem(code: code, rate: rate, countryName: CurrencyCodeMap.currencyCodeMap[code] ?? "" )
+                    CurrencyItem(code: code, rate: rate, countryName: CurrencyCodeMap.codeToNationName[code] ?? "" )
                 }.sorted{ $0.code < $1.code }
-                
-                self.sortedItems = self.allItems
-                
+                self.sortedItems = self.allItems // 최초에 검색된 아이템에 전체 아이템 주입
                 completeion(.success(()))
             case let .failure(error):
                 completeion(.failure(error))

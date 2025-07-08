@@ -6,9 +6,13 @@ import Then
 
 final class CurrencyListView: UIView {
     
+    // Delegate
     weak var delegate: CurrencyListDelegate?
     
+    // 객체 선언부
     private var viewModel: CurrencyListViewModel?
+    
+    // UI 구성요소 선언
     private let searchBar = UISearchBar().then {
         $0.searchTextField.backgroundColor = .systemGray6
         $0.placeholder = "통화 검색"
@@ -63,9 +67,7 @@ extension CurrencyListView: UITableViewDelegate, UITableViewDataSource {
         guard let rate = viewModel?.currencyItem(at: indexPath.row), let cell = tableView.dequeueReusableCell(withIdentifier: CurrencyListTableViewCell.id) as? CurrencyListTableViewCell else {
             return UITableViewCell()
         }
-
         cell.configureCell(rate)
-
         return cell
     }
 
@@ -74,6 +76,7 @@ extension CurrencyListView: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+// 서치 바 Delegate
 extension CurrencyListView: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         delegate?.didSearchbarTextChange(searchText)

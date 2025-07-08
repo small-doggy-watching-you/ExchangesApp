@@ -1,8 +1,9 @@
 
 import Foundation
 
+// 국가명 맵핑용 객체
 enum CurrencyCodeMap {
-    static let currencyCodeMap: [String: String] = [
+    static let codeToNationName: [String: String] = [
         "USD": "미국",
         "AED": "아랍에미리트",
         "AFN": "아프가니스탄",

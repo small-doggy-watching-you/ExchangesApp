@@ -5,6 +5,8 @@ import SnapKit
 import Then
 
 class CurrencyListViewController: UIViewController {
+    
+    // 객체 생성
     private let currencyListViewModel = CurrencyListViewModel()
     private let currencyListView = CurrencyListView()
     
@@ -16,8 +18,9 @@ class CurrencyListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        currencyListView.delegate = self
+        currencyListView.delegate = self // Delegate 주입
         
+        // 데이터 파싱 후 성공/실패 후 처리
         currencyListViewModel.fetchData { result in
             DispatchQueue.main.async{
                 switch result {
@@ -31,6 +34,7 @@ class CurrencyListViewController: UIViewController {
             }
         }
         
+        // 뷰모델 업데이트 감지
         currencyListViewModel.onDataUpdated = { [weak self] in
             DispatchQueue.main.async {
                 self?.currencyListView.reloadData()
@@ -46,7 +50,7 @@ class CurrencyListViewController: UIViewController {
     }
 }
 
-
+// 뷰와 연결된 Delegate
 extension CurrencyListViewController: CurrencyListDelegate {
     func didSearchbarTextChange(_ searchText: String) {
         currencyListViewModel.updateSearchedData(searchText)
