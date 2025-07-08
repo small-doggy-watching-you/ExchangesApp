@@ -49,7 +49,7 @@ final class ExchangeRateView: UIView {
     
     titleLabel.snp.makeConstraints {
       $0.top.equalTo(safeAreaLayoutGuide)
-      $0.leading.trailing.equalTo(safeAreaLayoutGuide).inset(20)
+      $0.leading.trailing.equalTo(safeAreaLayoutGuide).inset(16)
     }
     
     searchBar.snp.makeConstraints {

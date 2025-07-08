@@ -13,7 +13,9 @@ class ViewController: UIViewController {
   
   private let exchangeRateView = ExchangeRateView()
   private let exchangeRateService = ExchangeRateService()
+  private let currencyNameService = CurrencyNameService()
   private var dataSource = [(code: String, rate: Double)]()
+  private var currencyNames = [String: String]()
   
   override func loadView() {
     self.view = exchangeRateView
@@ -22,9 +24,10 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     print("viewDidLoad")
-    fetchExchangeRate()
     exchangeRateView.tableView.dataSource = self
     exchangeRateView.tableView.delegate = self
+    loadCurrencyNames()
+    fetchExchangeRate()
   }
   
   private func fetchExchangeRate() {
@@ -40,6 +43,13 @@ class ViewController: UIViewController {
         print("데이터 로드 실패: \(error)")
         self.showAlert(title: "경고", message: "데이터를 불러올 수 없습니다.")
       }
+    }
+  }
+  
+  private func loadCurrencyNames() {
+    currencyNameService.loadCurrencyNames { [weak self] names in
+      guard let self, let names = names else { return }
+      self.currencyNames = names
     }
   }
   
@@ -59,7 +69,11 @@ extension ViewController: UITableViewDataSource {
     guard let cell = tableView.dequeueReusableCell(withIdentifier: ExchangeRateCell.id) as? ExchangeRateCell else {
       return UITableViewCell()
     }
-    cell.configureCell(code: dataSource[indexPath.row].code, rate: dataSource[indexPath.row].rate)
+    cell.configureCell(
+      code: dataSource[indexPath.row].code,
+      name: currencyNames[dataSource[indexPath.row].code] ?? "알 수 없음",
+      rate: dataSource[indexPath.row].rate
+    )
     return cell
   }
 }
