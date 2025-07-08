@@ -6,6 +6,7 @@
 //
 
 enum CurrencyError: Error {
+  
   case fileNotFound
   case decodingFailed(Error)
   case networkFailed(Error)

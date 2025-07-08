@@ -21,6 +21,7 @@ final class ExchangeRateView: UIView {
   let searchBar: UISearchBar = {
     let searchBar = UISearchBar()
     searchBar.searchTextField.backgroundColor = .systemBackground
+    searchBar.placeholder = "통화 검색"
     return searchBar
   }()
   
@@ -29,6 +30,16 @@ final class ExchangeRateView: UIView {
     tableView.backgroundColor = .systemBackground
     tableView.register(ExchangeRateCell.self, forCellReuseIdentifier: ExchangeRateCell.id)
     return tableView
+  }()
+  
+  let emptyLabel: UILabel = {
+    let label = UILabel()
+    label.text = "검색 결과 없음"
+    label.textColor = .secondaryLabel
+    label.font = .systemFont(ofSize: 17)
+    label.textAlignment = .center
+    label.isHidden = true
+    return label
   }()
   
   override init(frame: CGRect) {
@@ -43,7 +54,7 @@ final class ExchangeRateView: UIView {
   private func setupUI() {
     backgroundColor = .systemBackground
     
-    [titleLabel, searchBar, tableView].forEach {
+    [titleLabel, searchBar, tableView, emptyLabel].forEach {
       addSubview( $0 )
     }
     
@@ -61,6 +72,10 @@ final class ExchangeRateView: UIView {
       $0.top.equalTo(searchBar.snp.bottom)
       $0.leading.trailing.equalTo(safeAreaLayoutGuide)
       $0.bottom.equalToSuperview()
+    }
+    
+    emptyLabel.snp.makeConstraints {
+      $0.center.equalTo(tableView)
     }
   }
 }

@@ -14,8 +14,10 @@ class ViewController: UIViewController {
   private let exchangeRateView = ExchangeRateView()
   private let exchangeRateService = ExchangeRateService()
   private let currencyNameService = CurrencyNameService()
-  private var dataSource = [(code: String, rate: Double)]()
   private var currencyNames = [String: String]()
+  
+  private var dataSource = [(code: String, rate: Double)]()
+  private var filteredDataSource = [(code: String, rate: Double)]()
   
   override func loadView() {
     self.view = exchangeRateView
@@ -26,6 +28,7 @@ class ViewController: UIViewController {
     print("viewDidLoad")
     exchangeRateView.tableView.dataSource = self
     exchangeRateView.tableView.delegate = self
+    exchangeRateView.searchBar.delegate = self
     loadCurrencyNames()
     fetchExchangeRate()
   }
@@ -37,6 +40,7 @@ class ViewController: UIViewController {
       case .success(let sortedRates):
         DispatchQueue.main.async {
           self.dataSource = sortedRates
+          self.filteredDataSource = sortedRates
           self.exchangeRateView.tableView.reloadData()
         }
       case .failure(let error):
@@ -66,7 +70,7 @@ class ViewController: UIViewController {
 
 extension ViewController: UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    dataSource.count
+    filteredDataSource.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -74,9 +78,9 @@ extension ViewController: UITableViewDataSource {
       return UITableViewCell()
     }
     cell.configureCell(
-      code: dataSource[indexPath.row].code,
-      name: currencyNames[dataSource[indexPath.row].code] ?? "알 수 없음",
-      rate: dataSource[indexPath.row].rate
+      code: filteredDataSource[indexPath.row].code,
+      name: currencyNames[filteredDataSource[indexPath.row].code] ?? "알 수 없음",
+      rate: filteredDataSource[indexPath.row].rate
     )
     return cell
   }
@@ -85,5 +89,25 @@ extension ViewController: UITableViewDataSource {
 extension ViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     60
+  }
+}
+
+extension ViewController: UISearchBarDelegate {
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    let searchText = searchText.trimmingCharacters(in: .whitespaces)
+    if searchText.isEmpty {
+      filteredDataSource = dataSource
+    } else {
+      filteredDataSource = dataSource.filter {
+        $0.code.lowercased().contains(searchText.lowercased()) ||
+        currencyNames[$0.code]?.lowercased().contains(searchText.lowercased()) ?? false
+      }
+    }
+    if filteredDataSource.isEmpty {
+      exchangeRateView.emptyLabel.isHidden = false
+    } else {
+      exchangeRateView.emptyLabel.isHidden = true
+    }
+    exchangeRateView.tableView.reloadData()
   }
 }

@@ -23,7 +23,7 @@ final class ExchangeRateCell: UITableViewCell {
   private let countryNameLabel: UILabel = {
     let label = UILabel()
     label.backgroundColor = .systemBackground
-    label.textColor = .gray
+    label.textColor = .secondaryLabel
     label.font = .systemFont(ofSize: 14)
     return label
   }()
