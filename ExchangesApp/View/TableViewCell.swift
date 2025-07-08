@@ -53,6 +53,9 @@ final class TableViewCell: UITableViewCell {
     }
   }
   
-//  public func configureCell(
+  public func configureCell(code: String, rate: Double) {
+    countryCodeLabel.text = code
+    rateLabel.text = String(format: "%.4f", rate)
+  }
   
 }
