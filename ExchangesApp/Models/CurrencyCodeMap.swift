@@ -168,7 +168,4 @@ enum CurrencyCodeMap {
         "ZWL": "짐바브웨",
     ]
 
-    static func countryName(_ currencyCode: String) -> String? {
-        return currencyCodeMap[currencyCode] ?? currencyCode
-    }
 }

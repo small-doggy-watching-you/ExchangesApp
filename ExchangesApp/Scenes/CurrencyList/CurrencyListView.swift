@@ -5,6 +5,9 @@ import SnapKit
 import Then
 
 final class CurrencyListView: UIView {
+    
+    weak var delegate: CurrencyListDelegate?
+    
     private var viewModel: CurrencyListViewModel?
     private let searchBar = UISearchBar().then {
         $0.searchTextField.backgroundColor = .systemGray6
@@ -20,11 +23,14 @@ final class CurrencyListView: UIView {
     func setupWithViewModel(_ viewModel: CurrencyListViewModel) {
         backgroundColor = .systemBackground // 배경색 설정
         self.viewModel = viewModel // 뷰모델 주입
-
+       
         // 테이블 뷰 셀 설정
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = 60 // 과제 제약조건
+        
+        // 서치 바 설정
+        searchBar.delegate = self
 
         // 뷰에 주입
         addSubview(searchBar)
@@ -54,7 +60,7 @@ final class CurrencyListView: UIView {
 extension CurrencyListView: UITableViewDelegate, UITableViewDataSource {
     // 어떤 데이터를 넣을 것인지
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let rate = viewModel?.item(at: indexPath.row), let cell = tableView.dequeueReusableCell(withIdentifier: CurrencyListTableViewCell.id) as? CurrencyListTableViewCell else {
+        guard let rate = viewModel?.currencyItem(at: indexPath.row), let cell = tableView.dequeueReusableCell(withIdentifier: CurrencyListTableViewCell.id) as? CurrencyListTableViewCell else {
             return UITableViewCell()
         }
 
@@ -65,5 +71,11 @@ extension CurrencyListView: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         viewModel?.numberOfItems ?? 0 // 테이블 뷰 행숫자
+    }
+}
+
+extension CurrencyListView: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        delegate?.didSearchbarTextChange(searchText)
     }
 }

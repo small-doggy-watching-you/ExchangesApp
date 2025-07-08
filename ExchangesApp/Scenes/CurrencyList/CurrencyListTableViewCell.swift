@@ -62,10 +62,10 @@ class CurrencyListTableViewCell: UITableViewCell {
     }
 
     // 셀 생성 함수
-    func configureCell(_ rate: (key: String, value: Double)) {
-        currencyLabel.text = rate.key
-        rateLabel.text = String(format: "%.4f", rate.value)
-        countryLabel.text = CurrencyCodeMap.countryName(rate.key)
+    func configureCell(_ item: CurrencyItem) {
+        currencyLabel.text = item.code
+        rateLabel.text = String(format: "%.4f", item.rate)
+        countryLabel.text = item.countryName
     }
 
     @available(*, unavailable)
