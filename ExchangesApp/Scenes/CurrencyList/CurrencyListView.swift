@@ -21,9 +21,10 @@ final class CurrencyListView: UIView {
         backgroundColor = .systemBackground // 배경색 설정
         self.viewModel = viewModel // 뷰모델 주입
 
-        // 테이블 뷰 설정
+        // 테이블 뷰 셀 설정
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.rowHeight = 60 // 과제 제약조건
         
         // 뷰에 주입
         addSubview(searchBar)
@@ -34,9 +35,10 @@ final class CurrencyListView: UIView {
             $0.top.equalTo(self.safeAreaLayoutGuide)
             $0.leading.trailing.equalToSuperview()
         }
+        
         tableView.snp.makeConstraints {
             $0.top.equalTo(searchBar.snp.bottom)
-            $0.leading.trailing.bottom.equalTo(self.safeAreaLayoutGuide)
+            $0.leading.trailing.bottom.equalToSuperview() // 과제 제약조건보다 자연스럽게 설정
         }
 
         // 테이블 뷰 리로드 함수 실행

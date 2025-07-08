@@ -7,19 +7,29 @@ import Then
 class CurrencyListTableViewCell: UITableViewCell {
     // 테이블 뷰 셀 식별id
     static let id = "CurrencyListTableViewCell"
+    
+    private let labelStackView = UIStackView().then{
+        $0.axis = .vertical
+        $0.spacing = 4
+    }
 
     // 통화 코드 라벨
-    private let currencyCode = UILabel().then {
+    private let currencyLabel = UILabel().then {
+        $0.font = .systemFont(ofSize: 16, weight: .medium)
         $0.textColor = .label
-        $0.textAlignment = .left
-        $0.font = .systemFont(ofSize: 17, weight: .medium)
+    }
+    
+    private let countryLabel = UILabel().then {
+        $0.font = .systemFont(ofSize: 14, weight: .medium)
+        $0.textColor = .gray
+        $0.textAlignment = .right
     }
 
     // 통화 숫자 라벨
-    private let currencyValue = UILabel().then {
+    private let rateLabel = UILabel().then {
         $0.textColor = .label
         $0.textAlignment = .right
-        $0.font = .systemFont(ofSize: 17, weight: .medium)
+        $0.font = .systemFont(ofSize: 16, weight: .medium)
     }
 
     // init
@@ -30,25 +40,33 @@ class CurrencyListTableViewCell: UITableViewCell {
 
     // 최초 실행시 레이아웃 설정
     func setupLayout() {
-        contentView.addSubview(currencyCode)
-        contentView.addSubview(currencyValue)
+        labelStackView.addArrangedSubview(currencyLabel)
+        labelStackView.addArrangedSubview(countryLabel)
+        
+        contentView.addSubview(labelStackView)
+        contentView.addSubview(rateLabel)
 
         // 오토 레이아웃
-        currencyCode.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
+        
+        labelStackView.snp.makeConstraints{
             $0.leading.equalToSuperview().offset(16)
+            $0.centerY.equalToSuperview()
         }
-
-        currencyValue.snp.makeConstraints {
+        
+        rateLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.trailing.equalToSuperview().offset(-16)
+            $0.leading.greaterThanOrEqualTo(labelStackView.snp.trailing).offset(16)
+            $0.width.equalTo(120)
         }
+
     }
 
     // 셀 생성 함수
     func configureCell(_ rate: (key: String, value: Double)) {
-        currencyCode.text = rate.key
-        currencyValue.text = String(format: "%.4f", rate.value)
+        currencyLabel.text = rate.key
+        rateLabel.text = String(format: "%.4f", rate.value)
+        countryLabel.text = CurrencyCodeMap.countryName(rate.key)
     }
 
     @available(*, unavailable)
