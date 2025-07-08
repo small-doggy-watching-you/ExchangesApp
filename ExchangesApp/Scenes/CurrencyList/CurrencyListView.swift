@@ -22,6 +22,14 @@ final class CurrencyListView: UIView {
         $0.register(CurrencyListTableViewCell.self, forCellReuseIdentifier: CurrencyListTableViewCell.id)
     }
 
+    private let emptyLabel = UILabel().then {
+        $0.text = "검색 결과 없음"
+        $0.textAlignment = .center
+        $0.textColor = .secondaryLabel
+        $0.font = .systemFont(ofSize: 14, weight: .medium)
+        $0.isHidden = true
+    }
+
     // 뷰모델을 전달 받아 최초 뷰 셋업설정
     func setupWithViewModel(_ viewModel: CurrencyListViewModel) {
         backgroundColor = .systemBackground // 배경색 설정
@@ -38,6 +46,7 @@ final class CurrencyListView: UIView {
         // 뷰에 주입
         addSubview(searchBar)
         addSubview(tableView)
+        addSubview(emptyLabel) // Z-index순서 나중에 추가될수록 위에 그려짐
 
         // 오토 레이아웃
         searchBar.snp.makeConstraints {
@@ -50,6 +59,10 @@ final class CurrencyListView: UIView {
             $0.leading.trailing.bottom.equalToSuperview() // 과제 제약조건보다 자연스럽게 설정
         }
 
+        emptyLabel.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+
         // 테이블 뷰 리로드 함수 실행
         reloadData()
     }
@@ -57,6 +70,7 @@ final class CurrencyListView: UIView {
     // 테이블 뷰 리로드
     func reloadData() {
         tableView.reloadData()
+        emptyLabel.isHidden = viewModel?.numberOfItems != 0 // 검색결과 0개일 경우 false로 변경
     }
 }
 
