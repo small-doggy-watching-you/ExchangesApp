@@ -5,10 +5,9 @@ import SnapKit
 import Then
 
 class CurrencyListTableViewCell: UITableViewCell {
-    
     // 테이블 뷰 셀 식별id
     static let id = "CurrencyListTableViewCell"
-    
+
     // 라벨 스택 뷰
     private let labelStackView = UIStackView().then {
         $0.axis = .vertical
@@ -20,7 +19,7 @@ class CurrencyListTableViewCell: UITableViewCell {
         $0.font = .systemFont(ofSize: 16, weight: .medium)
         $0.textColor = .label
     }
-    
+
     // 국가명 라벨
     private let countryLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 14, weight: .medium)

@@ -5,24 +5,23 @@ import SnapKit
 import Then
 
 class CurrencyListViewController: UIViewController {
-    
     // 객체 생성
     private let currencyListViewModel = CurrencyListViewModel()
     private let currencyListView = CurrencyListView()
-    
+
     // 사용자 정의 뷰로 오버라이드
     override func loadView() {
         view = currencyListView
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         currencyListView.delegate = self // Delegate 주입
-        
+
         // 데이터 파싱 후 성공/실패 후 처리
         currencyListViewModel.fetchData { result in
-            DispatchQueue.main.async{
+            DispatchQueue.main.async {
                 switch result {
                 case .success:
                     self.currencyListView.setupWithViewModel(self.currencyListViewModel)
@@ -33,7 +32,7 @@ class CurrencyListViewController: UIViewController {
                 }
             }
         }
-        
+
         // 뷰모델 업데이트 감지
         currencyListViewModel.onDataUpdated = { [weak self] in
             DispatchQueue.main.async {
@@ -41,7 +40,7 @@ class CurrencyListViewController: UIViewController {
             }
         }
     }
-    
+
     // 에러 출력 함수
     private func presentErrorAlert(message: String) {
         let alert = UIAlertController(title: "오류", message: message, preferredStyle: .alert)

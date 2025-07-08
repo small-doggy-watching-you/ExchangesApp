@@ -5,13 +5,12 @@ import SnapKit
 import Then
 
 final class CurrencyListView: UIView {
-    
     // Delegate
     weak var delegate: CurrencyListDelegate?
-    
+
     // 객체 선언부
     private var viewModel: CurrencyListViewModel?
-    
+
     // UI 구성요소 선언
     private let searchBar = UISearchBar().then {
         $0.searchTextField.backgroundColor = .systemGray6
@@ -27,12 +26,12 @@ final class CurrencyListView: UIView {
     func setupWithViewModel(_ viewModel: CurrencyListViewModel) {
         backgroundColor = .systemBackground // 배경색 설정
         self.viewModel = viewModel // 뷰모델 주입
-       
+
         // 테이블 뷰 셀 설정
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = 60 // 과제 제약조건
-        
+
         // 서치 바 설정
         searchBar.delegate = self
 
@@ -78,7 +77,7 @@ extension CurrencyListView: UITableViewDelegate, UITableViewDataSource {
 
 // 서치 바 Delegate
 extension CurrencyListView: UISearchBarDelegate {
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    func searchBar(_: UISearchBar, textDidChange searchText: String) {
         delegate?.didSearchbarTextChange(searchText)
     }
 }
