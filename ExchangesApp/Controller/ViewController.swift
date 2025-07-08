@@ -41,22 +41,26 @@ class ViewController: UIViewController {
         }
       case .failure(let error):
         print("데이터 로드 실패: \(error)")
-        self.showAlert(title: "경고", message: "데이터를 불러올 수 없습니다.")
+        DispatchQueue.main.async {
+          self.present(AlertFactory.makeErrorAlert(for: CurrencyError.decodingFailed(error)), animated: true)
+        }
       }
     }
   }
   
   private func loadCurrencyNames() {
-    currencyNameService.loadCurrencyNames { [weak self] names in
-      guard let self, let names = names else { return }
-      self.currencyNames = names
+    currencyNameService.loadCurrencyNames { [weak self] result in
+      guard let self else { return }
+      switch result {
+      case .success(let names):
+        self.currencyNames = names
+      case .failure(let error):
+        let alert = AlertFactory.makeErrorAlert(for: error)
+        DispatchQueue.main.async {
+          self.present(alert, animated: true)
+        }
+      }
     }
-  }
-  
-  private func showAlert(title: String, message: String) {
-    let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    alertController.addAction(UIAlertAction(title: "닫기", style: .cancel))
-    present(alertController, animated: true)
   }
 }
 

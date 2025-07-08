@@ -9,21 +9,20 @@ import Foundation
 
 class CurrencyNameService {
   
-  func loadCurrencyNames(completion: @escaping ([String: String]?) -> Void) {
+  func loadCurrencyNames(completion: @escaping (Result<[String: String], CurrencyError>) -> Void) {
     guard let path = Bundle.main.path(forResource: "CurrencyNames", ofType: "json") else {
       print("JSON file not found")
-      completion(nil)
+      completion(.failure(.fileNotFound))
       return
     }
     
     do {
       let data = try Data(contentsOf: URL(fileURLWithPath: path))
       let currencyNames = try JSONDecoder().decode([String: String].self, from: data)
-      completion(currencyNames)
+      completion(.success(currencyNames))
     } catch {
       print("JSON parsing error : \(error)")
-      completion(nil)
+      completion(.failure(.decodingFailed(error)))
     }
   }
 }
-
