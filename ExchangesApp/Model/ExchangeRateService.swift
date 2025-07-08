@@ -1,5 +1,5 @@
 //
-//  DataService.swift
+//  ExchangeRateService.swift
 //  ExchangesApp
 //
 //  Created by 김우성 on 7/7/25.
