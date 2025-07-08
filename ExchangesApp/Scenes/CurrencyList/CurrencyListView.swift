@@ -5,13 +5,13 @@ import SnapKit
 import Then
 
 final class CurrencyListView: UIView {
-    
     private var viewModel: CurrencyListViewModel?
     private let searchBar = UISearchBar().then {
         $0.searchTextField.backgroundColor = .systemGray6
         $0.placeholder = "통화 검색"
         $0.searchBarStyle = .default
     }
+
     private let tableView = UITableView().then {
         $0.register(CurrencyListTableViewCell.self, forCellReuseIdentifier: CurrencyListTableViewCell.id)
     }
@@ -25,7 +25,7 @@ final class CurrencyListView: UIView {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = 60 // 과제 제약조건
-        
+
         // 뷰에 주입
         addSubview(searchBar)
         addSubview(tableView)
@@ -35,7 +35,7 @@ final class CurrencyListView: UIView {
             $0.top.equalTo(self.safeAreaLayoutGuide)
             $0.leading.trailing.equalToSuperview()
         }
-        
+
         tableView.snp.makeConstraints {
             $0.top.equalTo(searchBar.snp.bottom)
             $0.leading.trailing.bottom.equalToSuperview() // 과제 제약조건보다 자연스럽게 설정

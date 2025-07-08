@@ -1,8 +1,7 @@
 
 import Foundation
 
-struct CurrencyCodeMap {
-    
+enum CurrencyCodeMap {
     static let currencyCodeMap: [String: String] = [
         "USD": "미국",
         "AED": "아랍에미리트",
@@ -166,13 +165,10 @@ struct CurrencyCodeMap {
         "YER": "예멘",
         "ZAR": "남아프리카 공화국",
         "ZMW": "잠비아",
-        "ZWL": "짐바브웨"
+        "ZWL": "짐바브웨",
     ]
-    
+
     static func countryName(_ currencyCode: String) -> String? {
         return currencyCodeMap[currencyCode] ?? currencyCode
     }
 }
-
-
-
