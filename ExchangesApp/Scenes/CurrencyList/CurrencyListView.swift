@@ -24,8 +24,6 @@ final class CurrencyListView: UIView {
         // 테이블 뷰 설정
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.rowHeight = UITableView.automaticDimension // 자동 높이지정
-        tableView.estimatedRowHeight = 40 // 예상 높이 (성능 최적화용)
         
         // 뷰에 주입
         addSubview(searchBar)
