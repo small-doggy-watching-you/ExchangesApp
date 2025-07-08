@@ -1,5 +1,5 @@
 //
-//  MainView.swift
+//  ExchangeRateView.swift
 //  ExchangesApp
 //
 //  Created by 김우성 on 7/7/25.
@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-final class MainView: UIView {
+final class ExchangeRateView: UIView {
   
   let titleLabel: UILabel = {
     let label = UILabel()
@@ -27,7 +27,7 @@ final class MainView: UIView {
   let tableView: UITableView = {
     let tableView = UITableView()
     tableView.backgroundColor = .systemBackground
-    tableView.register(TableViewCell.self, forCellReuseIdentifier: TableViewCell.id)
+    tableView.register(ExchangeRateCell.self, forCellReuseIdentifier: ExchangeRateCell.id)
     return tableView
   }()
   
@@ -49,11 +49,11 @@ final class MainView: UIView {
     
     titleLabel.snp.makeConstraints {
       $0.top.equalTo(safeAreaLayoutGuide)
-      $0.leading.trailing.equalTo(safeAreaLayoutGuide)
+      $0.leading.trailing.equalTo(safeAreaLayoutGuide).inset(20)
     }
     
     searchBar.snp.makeConstraints {
-      $0.top.equalTo(safeAreaLayoutGuide)
+      $0.top.equalTo(titleLabel.snp.bottom).offset(8)
       $0.leading.trailing.equalToSuperview()
     }
     

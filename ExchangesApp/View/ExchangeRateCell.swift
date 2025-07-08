@@ -1,5 +1,5 @@
 //
-//  TableViewCell.swift
+//  ExchangeRateCell.swift
 //  ExchangesApp
 //
 //  Created by 김우성 on 7/7/25.
@@ -8,11 +8,18 @@
 import UIKit
 import SnapKit
 
-final class TableViewCell: UITableViewCell {
+final class ExchangeRateCell: UITableViewCell {
   
-  static let id = "TableViewCell"
+  static let id = "ExchangeRateCell"
   
   private let countryCodeLabel: UILabel = {
+    let label = UILabel()
+    label.backgroundColor = .systemBackground
+    label.textColor = .label
+    return label
+  }()
+  
+  private let countryNameLabel: UILabel = {
     let label = UILabel()
     label.backgroundColor = .systemBackground
     label.textColor = .label
@@ -38,12 +45,17 @@ final class TableViewCell: UITableViewCell {
   
   private func configureUI() {
     contentView.backgroundColor = .systemBackground
-    [countryCodeLabel, rateLabel].forEach {
+    [countryCodeLabel, countryNameLabel, rateLabel].forEach {
       contentView.addSubview($0)
     }
     
     countryCodeLabel.snp.makeConstraints {
-      $0.centerY.equalToSuperview()
+      $0.bottom.equalTo(contentView.snp.centerY).inset(4)
+      $0.leading.equalToSuperview().inset(20)
+    }
+    
+    countryNameLabel.snp.makeConstraints {
+      $0.top.equalTo(contentView.snp.centerY).inset(4)
       $0.leading.equalToSuperview().inset(20)
     }
     
@@ -55,6 +67,7 @@ final class TableViewCell: UITableViewCell {
   
   public func configureCell(code: String, rate: Double) {
     countryCodeLabel.text = code
+    countryNameLabel.text = "일단아무거나"
     rateLabel.text = String(format: "%.4f", rate)
   }
   

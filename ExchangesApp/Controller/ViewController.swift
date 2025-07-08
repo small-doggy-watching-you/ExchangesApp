@@ -11,20 +11,20 @@ import UIKit
 
 class ViewController: UIViewController {
   
-  private let mainView = MainView()
+  private let exchangeRateView = ExchangeRateView()
   private let exchangeRateService = ExchangeRateService()
   private var dataSource = [(code: String, rate: Double)]()
   
   override func loadView() {
-    self.view = mainView
+    self.view = exchangeRateView
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
     print("viewDidLoad")
     fetchExchangeRate()
-    mainView.tableView.dataSource = self
-    mainView.tableView.delegate = self
+    exchangeRateView.tableView.dataSource = self
+    exchangeRateView.tableView.delegate = self
   }
   
   private func fetchExchangeRate() {
@@ -34,11 +34,11 @@ class ViewController: UIViewController {
       case .success(let sortedRates):
         DispatchQueue.main.async {
           self.dataSource = sortedRates
-          self.mainView.tableView.reloadData()
+          self.exchangeRateView.tableView.reloadData()
         }
       case .failure(let error):
         print("데이터 로드 실패: \(error)")
-        self.showAlert(title: "경고", message: "데이터 로드 실패")
+        self.showAlert(title: "경고", message: "데이터를 불러올 수 없습니다.")
       }
     }
   }
@@ -56,7 +56,7 @@ extension ViewController: UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell.id) as? TableViewCell else {
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: ExchangeRateCell.id) as? ExchangeRateCell else {
       return UITableViewCell()
     }
     cell.configureCell(code: dataSource[indexPath.row].code, rate: dataSource[indexPath.row].rate)
@@ -66,6 +66,6 @@ extension ViewController: UITableViewDataSource {
 
 extension ViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    56
+    60
   }
 }
