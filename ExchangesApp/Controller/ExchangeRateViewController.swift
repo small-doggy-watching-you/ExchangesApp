@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ExchangeRateViewController.swift
 //  ExchangesApp
 //
 //  Created by 김우성 on 7/7/25.
@@ -9,13 +9,12 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ExchangeRateViewController: UIViewController {
   
   private let exchangeRateView = ExchangeRateView()
   private let exchangeRateService = ExchangeRateService()
   private let currencyNameService = CurrencyNameService()
   private var currencyNames = [String: String]()
-  
   private var dataSource = [(code: String, rate: Double)]()
   private var filteredDataSource = [(code: String, rate: Double)]()
   
@@ -68,7 +67,7 @@ class ViewController: UIViewController {
   }
 }
 
-extension ViewController: UITableViewDataSource {
+extension ExchangeRateViewController: UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     filteredDataSource.count
   }
@@ -86,13 +85,16 @@ extension ViewController: UITableViewDataSource {
   }
 }
 
-extension ViewController: UITableViewDelegate {
+extension ExchangeRateViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     60
   }
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    
+  }
 }
 
-extension ViewController: UISearchBarDelegate {
+extension ExchangeRateViewController: UISearchBarDelegate {
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
     let searchText = searchText.trimmingCharacters(in: .whitespaces)
     if searchText.isEmpty {
