@@ -18,4 +18,12 @@ class CalculatorViewModel {
     var counntryNameText: String {
         return "\(currencyItem.countryName)"
     }
+    
+    var outputText: String = ""
+    
+    func claculate(amount: String) -> Void {
+        let input = Double(amount) ?? 0.0
+        outputText = String(format: "%.2f", input * currencyItem.rate)
+        print(outputText)
+    }
 }

@@ -12,13 +12,13 @@ final class CurrencyListView: UIView {
     private var viewModel: CurrencyListViewModel?
 
     // UI 구성요소 선언
-    private let searchBar = UISearchBar().then {
+    let searchBar = UISearchBar().then {
         $0.searchTextField.backgroundColor = .systemGray6
         $0.placeholder = "통화 검색"
         $0.searchBarStyle = .default
     }
 
-    private let tableView = UITableView().then {
+    let tableView = UITableView().then {
         $0.register(CurrencyListTableViewCell.self, forCellReuseIdentifier: CurrencyListTableViewCell.id)
     }
 

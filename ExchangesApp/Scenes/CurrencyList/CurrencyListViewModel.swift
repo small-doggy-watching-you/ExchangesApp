@@ -15,6 +15,7 @@ class CurrencyListViewModel {
     private let dataService = DataService()
 
     // 데이터 파싱 함수
+    // completeion(.success(()))를 업데이트/에러 클로저 호출로 변경
     func fetchData(completeion: @escaping (Result<Void, Error>) -> Void) {
         dataService.fetchData { [weak self] result in
             guard let self else { return }

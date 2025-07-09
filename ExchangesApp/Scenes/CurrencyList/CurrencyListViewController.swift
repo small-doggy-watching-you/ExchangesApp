@@ -10,15 +10,19 @@ class CurrencyListViewController: UIViewController {
     private let currencyListView = CurrencyListView()
 
     // 사용자 정의 뷰로 오버라이드
+    // TODO: Lv6에서 개편
     override func loadView() {
         view = currencyListView
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        view.addSubview(currencyListView)
 
         currencyListView.delegate = self // Delegate 주입
-
+        
+//        currencyListViewModel.fetchData()
         // 데이터 파싱 후 성공/실패 후 처리
         currencyListViewModel.fetchData { result in
             DispatchQueue.main.async {
@@ -58,8 +62,7 @@ extension CurrencyListViewController: CurrencyListDelegate {
 
     // 행 클릭 감지
     func didSelectCurrency(_ currencyItem: CurrencyItem) {
-        let calculatorVC = CalculatorViewController()
-        calculatorVC.currencyItem = currencyItem // 해당 셀의 데이터 주입
+        let calculatorVC = CalculatorViewController(currencyItem: currencyItem)
         navigationController?.pushViewController(calculatorVC, animated: true) // 화면전환
     }
 }
