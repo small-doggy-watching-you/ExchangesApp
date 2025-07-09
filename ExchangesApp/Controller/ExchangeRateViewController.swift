@@ -24,7 +24,7 @@ class ExchangeRateViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    print("viewDidLoad")
+    print("exchangeRateViewDidLoad")
     exchangeRateView.tableView.dataSource = self
     exchangeRateView.tableView.delegate = self
     exchangeRateView.searchBar.delegate = self
@@ -90,7 +90,9 @@ extension ExchangeRateViewController: UITableViewDelegate {
     60
   }
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    
+    let selectedRow = filteredDataSource[indexPath.row]
+    let calculatorVC = CalculatorViewController(selectedRow.code, currencyNames[selectedRow.code] ?? "알 수 없음", selectedRow.rate)
+    navigationController?.pushViewController(calculatorVC, animated: true)
   }
 }
 
