@@ -50,7 +50,7 @@ final class CurrencyListView: UIView {
 
         // 오토 레이아웃
         searchBar.snp.makeConstraints {
-            $0.top.equalTo(self.safeAreaLayoutGuide)
+            $0.top.equalTo(safeAreaLayoutGuide)
             $0.leading.trailing.equalToSuperview()
         }
 
@@ -86,6 +86,14 @@ extension CurrencyListView: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         viewModel?.numberOfItems ?? 0 // 테이블 뷰 행숫자
+    }
+    
+    // 행 클릭 감지
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true) // 배경 선택상태 해제 사용자경험 개선용 코드
+        if let currencyItem = viewModel?.currencyItem(at: indexPath.row) {
+            delegate?.didSelectCurrency(currencyItem) // Delegate 실행
+        }
     }
 }
 
