@@ -51,11 +51,11 @@ class CurrencyListViewController: UIViewController {
 
 // 뷰와 연결된 Delegate
 extension CurrencyListViewController: CurrencyListDelegate {
-    
     // 서치바의 텍스트 변화 감지
     func didSearchbarTextChange(_ searchText: String) {
         currencyListViewModel.updateSearchedData(searchText)
     }
+
     // 행 클릭 감지
     func didSelectCurrency(_ currencyItem: CurrencyItem) {
         let calculatorVC = CalculatorViewController()

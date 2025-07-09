@@ -87,7 +87,7 @@ extension CurrencyListView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         viewModel?.numberOfItems ?? 0 // 테이블 뷰 행숫자
     }
-    
+
     // 행 클릭 감지
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true) // 배경 선택상태 해제 사용자경험 개선용 코드
