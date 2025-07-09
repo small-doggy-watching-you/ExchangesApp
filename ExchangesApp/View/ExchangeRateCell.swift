@@ -44,8 +44,8 @@ final class ExchangeRateCell: UITableViewCell {
   
   let favoriteButton: UIButton = {
     let button = UIButton(type: .custom)
-    button.setImage(UIImage(systemName: "star"), for: .normal)
     button.tintColor = .systemYellow
+    button.setImage(UIImage(systemName: "star"), for: .normal)
     return button
   }()
   
@@ -82,10 +82,13 @@ final class ExchangeRateCell: UITableViewCell {
     }
   }
   
-  public func configureCell(code: String, name: String, rate: Double) {
+  public func configureCell(code: String, name: String, rate: Double, isFavorite: Bool) {
     countryCodeLabel.text = code
     countryNameLabel.text = name
     rateLabel.text = String(format: "%.4f", rate)
+    
+    let imageName = isFavorite ? "star.fill" : "star"
+    favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
   }
   
 }
