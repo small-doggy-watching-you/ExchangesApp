@@ -14,7 +14,6 @@ final class ExchangeRateCell: UITableViewCell {
   
   private let countryCodeLabel: UILabel = {
     let label = UILabel()
-    label.backgroundColor = .systemBackground
     label.textColor = .label
     label.font = .systemFont(ofSize: 16, weight: .medium)
     return label
@@ -22,7 +21,6 @@ final class ExchangeRateCell: UITableViewCell {
   
   private let countryNameLabel: UILabel = {
     let label = UILabel()
-    label.backgroundColor = .systemBackground
     label.textColor = .secondaryLabel
     label.font = .systemFont(ofSize: 14)
     return label
@@ -38,7 +36,6 @@ final class ExchangeRateCell: UITableViewCell {
   
   private let rateLabel: UILabel = {
     let label = UILabel()
-    label.backgroundColor = .systemBackground
     label.textColor = .label
     label.font = .systemFont(ofSize: 16)
     label.textAlignment = .right
@@ -63,7 +60,6 @@ final class ExchangeRateCell: UITableViewCell {
   }
   
   private func configureUI() {
-    contentView.backgroundColor = .systemBackground
     [labelStackView, rateLabel, favoriteButton].forEach {
       contentView.addSubview($0)
     }

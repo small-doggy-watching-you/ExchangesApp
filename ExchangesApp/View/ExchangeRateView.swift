@@ -20,14 +20,12 @@ final class ExchangeRateView: UIView {
   
   let searchBar: UISearchBar = {
     let searchBar = UISearchBar()
-    searchBar.searchTextField.backgroundColor = .systemBackground
     searchBar.placeholder = "통화 검색"
     return searchBar
   }()
   
   let tableView: UITableView = {
     let tableView = UITableView()
-    tableView.backgroundColor = .systemBackground
     tableView.register(ExchangeRateCell.self, forCellReuseIdentifier: ExchangeRateCell.id)
     return tableView
   }()

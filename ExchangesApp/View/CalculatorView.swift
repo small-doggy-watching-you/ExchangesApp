@@ -20,7 +20,6 @@ final class CalculatorView: UIView {
   
   let countryCodeLabel: UILabel = {
     let label = UILabel()
-    label.backgroundColor = .systemBackground
     label.textColor = .label
     label.font = .systemFont(ofSize: 24, weight: .bold)
     return label
@@ -28,7 +27,6 @@ final class CalculatorView: UIView {
   
   let countryNameLabel: UILabel = {
     let label = UILabel()
-    label.backgroundColor = .systemBackground
     label.textColor = .secondaryLabel
     label.font = .systemFont(ofSize: 16)
     return label
@@ -44,7 +42,6 @@ final class CalculatorView: UIView {
   
   let amountTextField: UITextField = {
     let textField = UITextField()
-    textField.backgroundColor = .systemBackground
     textField.textColor = .label
     textField.font = .systemFont(ofSize: 16)
     textField.borderStyle = .roundedRect
@@ -96,7 +93,7 @@ final class CalculatorView: UIView {
     }
     
     labelStackView.snp.makeConstraints {
-      $0.top.equalTo(safeAreaLayoutGuide).offset(32)
+      $0.top.equalTo(titleLabel.snp.bottom).offset(32)
       $0.centerX.equalToSuperview()
     }
     

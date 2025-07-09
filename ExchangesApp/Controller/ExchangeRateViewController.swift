@@ -93,6 +93,7 @@ extension ExchangeRateViewController: UITableViewDelegate {
     let selectedRow = filteredDataSource[indexPath.row]
     let calculatorVC = CalculatorViewController(selectedRow.code, currencyNames[selectedRow.code] ?? "알 수 없음", selectedRow.rate)
     navigationController?.pushViewController(calculatorVC, animated: true)
+    tableView.deselectRow(at: indexPath, animated: true) // 셀 선택 상태를 해제함
   }
 }
 
