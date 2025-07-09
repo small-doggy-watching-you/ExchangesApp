@@ -8,7 +8,7 @@
 import Foundation
 
 struct ExchangeRateResponse: Codable {
-    let result: String
-    let base_code: String
-    let rates: [String: Double]
+    let result: String // API 호출 결과
+    let base_code: String // 기준 통화 코드
+    let rates: [String: Double] // 통화 코드별 환율 딕셔너리
 }
