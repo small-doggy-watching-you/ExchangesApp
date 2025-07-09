@@ -34,9 +34,17 @@ class CalculatorViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     print("calculatorViewDidLoad")
+    
+    calculatorView.convertButton.addTarget(self, action: #selector(handleCalculate), for: .touchUpInside)
   }
-}
-
-extension CalculatorViewController: UITextFieldDelegate {
   
+  @objc func handleCalculate() {
+    guard let input = calculatorView.amountTextField.text, let number = Double(input) else {
+      calculatorView.resultLabel.text = "올바른 숫자를 입력하세요."
+      return
+    }
+    
+    let result = number * (self.rate ?? 0)
+    calculatorView.resultLabel.text = String(format: "%.2f", result)
+  }
 }
