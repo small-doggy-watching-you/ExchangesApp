@@ -35,8 +35,9 @@ class CurrencyListViewController: UIViewController {
         // 데이터 파싱 후 성공/실패 후 처리
         viewModel.action(.fetchdata)
         
-        configureUI()
+        configureUI() // UI생성
         
+        // 데이터 변화 감지 시 테이블 뷰 리로드
         viewModel.onStateChanged = { [weak self] state in
             guard let self else {return}
             DispatchQueue.main.async {
@@ -44,6 +45,7 @@ class CurrencyListViewController: UIViewController {
             }
         }
         
+        // 에러 발생 감지
         viewModel.onError = { [weak self] error in
             guard let self else {return}
             DispatchQueue.main.async {
@@ -59,7 +61,7 @@ class CurrencyListViewController: UIViewController {
         present(alert, animated: true)
     }
     
-    
+    // UI 레이아웃 생성
     func configureUI() {
         view.backgroundColor = .systemBackground // 배경색 설정
         
@@ -103,7 +105,8 @@ class CurrencyListViewController: UIViewController {
 }
 
 extension CurrencyListViewController: UITableViewDelegate, UITableViewDataSource {
-    // 어떤 데이터를 넣을 것인지
+    
+    // 어떤 데이터를 넣을 것인지 정의
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = viewModel.state.sortedItems[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "CurrencyListTableViewCell", for: indexPath) as! CurrencyListTableViewCell
@@ -111,14 +114,15 @@ extension CurrencyListViewController: UITableViewDelegate, UITableViewDataSource
         return cell
     }
     
+    // 테이블 뷰 행 숫자 정의
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        viewModel.state.numberOfItems // 테이블 뷰 행숫자
+        viewModel.state.numberOfItems
     }
     
     // 행 클릭 감지
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true) // 배경 선택상태 해제 사용자경험 개선용 코드
-        let item = viewModel.state.sortedItems[indexPath.row]
+        let item = viewModel.state.sortedItems[indexPath.row] // 선택한 행의 정보 획득
         let calculatorVC = CalculatorViewController(currencyItem: item)
         navigationController?.pushViewController(calculatorVC, animated: true)
     }

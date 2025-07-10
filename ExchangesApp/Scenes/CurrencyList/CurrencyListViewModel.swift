@@ -1,16 +1,11 @@
 
 import Foundation
 
-// 1.action 빼고 함수 전부 private
-// 2.action을 통하게 함수들 연결
-// 3.state도 통해서
-// 4. error도 action 통해서
-
 class CurrencyListViewModel: ViewModelProtocol {
     
     enum Atcion {
-        case fetchdata
-        case updateSearchedData(String)
+        case fetchdata // 데이터 파싱
+        case updateSearchedData(String) // 서치 바에 검색어 입력시
     }
 
     struct State {
@@ -18,6 +13,7 @@ class CurrencyListViewModel: ViewModelProtocol {
         var numberOfItems: Int { sortedItems.count } // 테이블 뷰에서 사용할 셀 개수
     }
     
+    // state
     private(set) var state: State {
         didSet {
             onStateChanged?(state)
@@ -29,18 +25,20 @@ class CurrencyListViewModel: ViewModelProtocol {
     private var currency: Currency? // JSON 파싱 통째로 보존
 
     // 클로저
-    var onStateChanged: ((State) -> Void)?
-    var onError: ((Error) -> Void)?
+    var onStateChanged: ((State) -> Void)? // 데이터 변화 감지
+    var onError: ((Error) -> Void)? // 에러 발생 전달
 
     // 객체 선언
     private let dataService = DataService()
     
+    // init
     init(){
         state = State(
             sortedItems: [],
         )
     }
     
+    // action
     func action(_ action: Atcion) {
         switch action {
         case .fetchdata:
