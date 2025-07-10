@@ -1,6 +1,11 @@
 
 import Foundation
 
+// 1.action 빼고 함수 전부 private
+// 2.action을 통하게 함수들 연결
+// 3.state도 통해서
+// 4. error도 action 통해서
+
 class CurrencyListViewModel {
     // 프로퍼티 선언
     var allItems: [CurrencyItem] = [] // 전체 아이템

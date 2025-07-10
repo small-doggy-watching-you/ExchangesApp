@@ -17,11 +17,11 @@ class CurrencyListViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
 //        view.addSubview(currencyListView)
 
         currencyListView.delegate = self // Delegate 주입
-        
+
 //        currencyListViewModel.fetchData()
         // 데이터 파싱 후 성공/실패 후 처리
         currencyListViewModel.fetchData { result in
