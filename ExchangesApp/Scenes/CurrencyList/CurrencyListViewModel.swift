@@ -2,7 +2,6 @@
 import Foundation
 
 class CurrencyListViewModel: ViewModelProtocol {
-    
     enum Atcion {
         case fetchdata // 데이터 파싱
         case updateSearchedData(String) // 서치 바에 검색어 입력시
@@ -12,14 +11,14 @@ class CurrencyListViewModel: ViewModelProtocol {
         var sortedItems: [CurrencyItem] // 검색한 아이템
         var numberOfItems: Int { sortedItems.count } // 테이블 뷰에서 사용할 셀 개수
     }
-    
+
     // state
     private(set) var state: State {
         didSet {
             onStateChanged?(state)
         }
     }
-    
+
     // 프로퍼티 선언
     var allItems: [CurrencyItem] = [] // 전체 아이템
     private var currency: Currency? // JSON 파싱 통째로 보존
@@ -30,23 +29,22 @@ class CurrencyListViewModel: ViewModelProtocol {
 
     // 객체 선언
     private let dataService = DataService()
-    
+
     // init
-    init(){
+    init() {
         state = State(
             sortedItems: [],
         )
     }
-    
+
     // action
     func action(_ action: Atcion) {
         switch action {
         case .fetchdata:
             fetchData()
-        case .updateSearchedData(let keyword):
+        case let .updateSearchedData(keyword):
             updateSearchedData(keyword)
         }
-       
     }
 
     // 데이터 파싱 후 데이터 보존

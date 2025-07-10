@@ -13,10 +13,12 @@ final class CalculatorViewModel: ViewModelProtocol {
         var currencyText: String {
             return "\(currencyItem.code)"
         }
+
         // 국가명
         var countryNameText: String {
             return "\(currencyItem.countryName)"
         }
+
         // 변환 결과 보여줄 문자열
         var resultText: String
     }
@@ -27,6 +29,7 @@ final class CalculatorViewModel: ViewModelProtocol {
             onStateChanged?(state)
         }
     }
+
     // 클로저
     var onStateChanged: ((State) -> Void)? // 데이터 변화 감지
     var onError: ((Error) -> Void)? // 에러 감지
@@ -38,12 +41,12 @@ final class CalculatorViewModel: ViewModelProtocol {
             resultText: "계산 결과가 여기에 표시됩니다."
         )
     }
-    
+
     // action
     func action(_ action: Atcion) {
         do {
             switch action {
-            case .currencyExchange(let string):
+            case let .currencyExchange(string):
                 try currencyExchange(inputText: string)
             }
 
@@ -72,7 +75,7 @@ final class CalculatorViewModel: ViewModelProtocol {
 
         state.resultText = "$\(inputCurrencyText) → \(outputCurrencyText) \(state.currencyItem.code)"
     }
-    
+
     // 순수 환율 숫자 계산
     private func calculate(amount: Double) -> Double {
         return amount * state.currencyItem.rate
