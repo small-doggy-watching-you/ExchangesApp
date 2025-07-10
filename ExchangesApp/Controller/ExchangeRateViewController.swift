@@ -36,6 +36,7 @@ class ExchangeRateViewController: UIViewController {
     fetchExchangeRate()
   }
   
+  /// [국가코드 : 국가명] 딕셔너리를 불러와 클래스의 currencyNames에 넣어 주는 함수.
   private func loadCurrencyNames() {
     currencyNameService.loadCurrencyNames { [weak self] result in
       guard let self else { return }
@@ -51,6 +52,8 @@ class ExchangeRateViewController: UIViewController {
     }
   }
   
+  /// 받아온 [ExchangeRate] 로 만들어진 국가코드 순으로 정렬된 배열을 `CurrencyItem` 배열로 변환하는 함수.
+  /// 성공적으로 데이터를 가져오면 메인 스레드에서 `dataSource`를 갱신하고 즐겨찾기 정보를 동기화한다.
   private func fetchExchangeRate() {
     exchangeRateService.fetchSortedRates { [weak self] result in
       guard let self else { return }
@@ -58,12 +61,8 @@ class ExchangeRateViewController: UIViewController {
       case .success(let sortedRates):
         DispatchQueue.main.async {
           self.dataSource = sortedRates.map { (code, rate) in
-            CurrencyItem(
-              code: code,
-              name: self.currencyNames[code] ?? "알 수 없음",
-              rate: rate,
-              isFavorite: false
-            )
+            let name = self.currencyNames[code] ?? "알 수 없음"
+            return CurrencyItem(code: code, name: name, rate: rate, isFavorite: false)
           }
           self.syncFavorites()
         }
@@ -76,6 +75,7 @@ class ExchangeRateViewController: UIViewController {
     }
   }
   
+  /// 즐겨찾기 CoreData에 저장된 국가라면 isFavorite를 true로 만들어주고, filteredDataSource에 주입하고 정렬해 리로드하는 함수.
   private func syncFavorites() {
     do {
       let favCodes = try FavoriteStore.shared.fetchFavorites()
@@ -91,16 +91,20 @@ class ExchangeRateViewController: UIViewController {
     }
   }
   
+  /// filteredDataSource를 isFavorite== true가 앞으로 오도록, 그리고 국가코드 기준으로 오름차순으로 정렬하고 테이블뷰를 재로드하는 함수.
   private func sortAndReload() {
     filteredDataSource.sort { (lhs, rhs) -> Bool in
       if lhs.isFavorite != rhs.isFavorite {
         return lhs.isFavorite && !rhs.isFavorite
+      } else {
+        return lhs.code < rhs.code
       }
-      return lhs.code < rhs.code
     }
     exchangeRateView.tableView.reloadData()
   }
   
+  /// 이벤트 발생시킨 버튼에 해당하는 아이템의 isFavorite 상태를 전환하고, 아이템의 isFavorite 상태에 따라 CoreData에 추가하거나 제거를 시도한 뒤
+  /// 방금 filteredDataSource의 item 상태를 변경했으니 dataSource (원본)의 아이템 상태도 업데이트하고, syncFavorites() 실행하는 함수.
   @objc
   private func handleFavoriteTapped(_ sender: UIButton) {
     let index = sender.tag

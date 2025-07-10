@@ -19,6 +19,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     window.makeKeyAndVisible()
     self.window = window
   }
+  
+//  UINavigation
+//
+//  let navi = UINavigationController()
+//  navi.setViewControllers([MainViewController(), DetailViewController()], animated: false)
+//
+//  파라미터가 있으면 디테일뷰로 넘기고, 없으면 메인으로 하게하면 되겠다
+//
+
 
   func sceneDidDisconnect(_ scene: UIScene) {
     // Called as the scene is being released by the system.
