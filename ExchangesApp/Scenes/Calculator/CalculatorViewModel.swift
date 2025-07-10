@@ -39,7 +39,7 @@ final class CalculatorViewModel: ViewModelProtocol {
     func action(_ action: Atcion) {
         do {
             switch action {
-            case let .currencyExchange(string):
+            case .currencyExchange(let string):
                 try currencyExchange(inputText: string)
             }
 
