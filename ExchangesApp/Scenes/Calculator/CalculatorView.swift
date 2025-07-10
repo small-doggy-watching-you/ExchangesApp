@@ -53,13 +53,8 @@ final class CalculatorView: UIView {
     }
     
     // 뷰 모델을 받아 최초 셋업
-    func setupWithViewModel(_ viewModel: CalculatorViewModel) {
-        self.viewModel = viewModel
+    func configureUI() {
         backgroundColor = .systemBackground // 배경색 설정
-        
-        
-        currencyLabel.text = viewModel.currencyText
-        countryLabel.text = viewModel.counntryNameText
         
         labelStackView.addArrangedSubview(currencyLabel)
         labelStackView.addArrangedSubview(countryLabel)
@@ -92,7 +87,6 @@ final class CalculatorView: UIView {
         }
     }
     
-
 }
 
 
