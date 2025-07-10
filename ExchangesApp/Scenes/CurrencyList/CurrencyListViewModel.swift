@@ -2,7 +2,7 @@
 import Foundation
 
 class CurrencyListViewModel: ViewModelProtocol {
-    enum Atcion {
+    enum Action {
         case fetchdata // 데이터 파싱
         case updateSearchedData(String) // 서치 바에 검색어 입력시
     }
@@ -38,7 +38,7 @@ class CurrencyListViewModel: ViewModelProtocol {
     }
 
     // action
-    func action(_ action: Atcion) {
+    func action(_ action: Action) {
         switch action {
         case .fetchdata:
             fetchData()

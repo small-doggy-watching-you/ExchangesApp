@@ -2,7 +2,7 @@
 import Foundation
 
 final class CalculatorViewModel: ViewModelProtocol {
-    enum Atcion {
+    enum Action {
         case currencyExchange(String)
     }
 
@@ -43,7 +43,7 @@ final class CalculatorViewModel: ViewModelProtocol {
     }
 
     // action
-    func action(_ action: Atcion) {
+    func action(_ action: Action) {
         do {
             switch action {
             case let .currencyExchange(string):
