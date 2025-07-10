@@ -43,7 +43,7 @@ class CalculatorViewController: UIViewController {
     }
 
     // viewModel.state
-    func updateUI(_ state: CalculatorState) {
+    func updateUI(_ state: CalculatorViewModel.State) {
         calculatorView.currencyLabel.text = state.currencyText
         calculatorView.countryLabel.text = state.countryNameText
         calculatorView.resultLabel.text = state.resultText
