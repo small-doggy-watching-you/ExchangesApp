@@ -50,6 +50,10 @@ class CalculatorViewModel {
             throw InputError.invalidNumber
         }
         
+        if textToDouble < 0  {
+            throw InputError.invalidNumber
+        }
+        
         let exchange = calculate(amount: textToDouble)
         let inputCurrencyText = String(format: "%.2f", textToDouble)
         let outputCurrencyText = String(format: "%.2f", exchange)
