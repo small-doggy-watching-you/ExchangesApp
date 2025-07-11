@@ -137,7 +137,7 @@ final class CoreDataManager {
         let dummyData = TestData.testCurrencyDummy
         addCurrencyData(dummyData)
     }
-    
+
     // 5건이 넘으면 삭제(임시)
     func cleanUpOldCurrencySnapshots(keeping maxCount: Int = 5) {
         let fetch: NSFetchRequest<CurrencySnapshot> = CurrencySnapshot.fetchRequest()
@@ -146,12 +146,11 @@ final class CoreDataManager {
         if let results = try? context.fetch(fetch), results.count > maxCount {
             // result 바인딩 + 카운트가 허용숫자를 넘었을 때 실행
             let excess = results.count - maxCount
-            for i in 0..<excess {
+            for i in 0 ..< excess {
                 context.delete(results[i])
             }
             print("Deleted \(excess) old CurrencySnapshot(s).")
             saveContext()
         }
     }
-
 }
