@@ -7,38 +7,38 @@ class CurrencyListViewModel: ViewModelProtocol {
         case updateSearchedData(String) // 서치 바에 검색어 입력시
         case favoriteToggle(Int)
     }
-    
+
     struct State {
         var sortedItems: [CurrencyItem] // 검색한 아이템
         var numberOfItems: Int { sortedItems.count } // 테이블 뷰에서 사용할 셀 개수
     }
-    
+
     // state
     private(set) var state: State {
         didSet {
             onStateChanged?(state)
         }
     }
-    
+
     // 프로퍼티 선언
     var allItems: [CurrencyItem] = [] // 전체 아이템
     private var currency: Currency? // JSON 파싱 통째로 보존
-    
+
     // 클로저
     var onStateChanged: ((State) -> Void)? // 데이터 변화 감지
     var onError: ((Error) -> Void)? // 에러 발생 전달
     var onAutoNavigate: ((CurrencyItem) -> Void)?
-    
+
     // 객체 선언
     private let dataService = DataService()
-    
+
     // init
     init() {
         state = State(
             sortedItems: [],
         )
     }
-    
+
     // action
     func action(_ action: Action) {
         switch action {
@@ -50,7 +50,7 @@ class CurrencyListViewModel: ViewModelProtocol {
             favoriteToggle(index)
         }
     }
-    
+
     // 데이터 파싱 후 데이터 보존
     private func fetchData() {
         dataService.fetchData { [weak self] result in
@@ -58,7 +58,7 @@ class CurrencyListViewModel: ViewModelProtocol {
             switch result {
             case let .success(currency):
                 self.currency = currency
-                CoreDataManager.shared.addCurrencyData(currency) //파싱 데이터 코어 데이터에 저장
+                CoreDataManager.shared.addCurrencyData(currency) // 파싱 데이터 코어 데이터에 저장
                 let oldCurrecny = CoreDataManager.shared.beforeCurrencyData(before: currency.timeLastUpdateUtc) // 오늘 이전 데이터 중 가장 최근 데이터 추출
                 // rates가 JSON으로 인코딩되어 DB(코어 데이터)에 들어가 있으므로 디코딩
                 let oldRates: [String: Double]? = {
@@ -68,7 +68,7 @@ class CurrencyListViewModel: ViewModelProtocol {
                     else { return nil }
                     return decoded
                 }()
-                
+
                 let favoriteCodes = CoreDataManager.shared.fetchAllFavoriteCodes() // 즐겨찾기에 등록된 코드정보 획득
                 self.allItems = currency.rates.map { code, rate in
                     CurrencyItem(
@@ -80,45 +80,45 @@ class CurrencyListViewModel: ViewModelProtocol {
                     )
                 }.sorted { $0.code < $1.code }
                 state.sortedItems = customSort(self.allItems) // 최초에 검색된 아이템에 전체 아이템 주입
-                
+
                 // 화면이동 처리
                 if let lastScreen = CoreDataManager.shared.loadLastScreen(), // 마지막 화면이 있고
                    lastScreen.screenType == LastScreenType.calcuator.rawValue, // 계산기 라면
                    let code = lastScreen.currencyCode, // 코드가 존재하면
-                   let item = self.allItems.first(where: { $0.code == code }){ // 현재 메모리에 해당 통화 코드가 존재하면
+                   let item = self.allItems.first(where: { $0.code == code })
+                { // 현재 메모리에 해당 통화 코드가 존재하면
                     DispatchQueue.main.async {
                         self.onAutoNavigate?(item)
                     }
-                    
                 }
-                
+
             case let .failure(error):
                 onError?(error)
             }
         }
     }
-    
+
     // 서치바에 입력된 키워드로 검색
     private func updateSearchedData(_ keyword: String) {
         let searchedData = allItems.map { $0 }
             .filter { $0.code.lowercased().hasPrefix(keyword.lowercased()) || $0.countryName.lowercased().hasPrefix(keyword.lowercased()) }
         state.sortedItems = customSort(searchedData)
     }
-    
+
     // 즐겨찾기 버튼 토글
     private func favoriteToggle(_ index: Int) {
         let item = state.sortedItems[index] // 선택한 셀의 아이템
         item.isFavorited.toggle() // 즐겨찾기 정보 토글
-        
+
         if item.isFavorited {
             CoreDataManager.shared.addFavorite(code: item.code) // 추가
         } else {
             CoreDataManager.shared.removeFavorite(code: item.code) // 제거
         }
-        
+
         return state.sortedItems = customSort(state.sortedItems) // 정렬
     }
-    
+
     // 커스텀 정렬함수
     private func customSort(_ items: [CurrencyItem]) -> [CurrencyItem] {
         items.sorted {

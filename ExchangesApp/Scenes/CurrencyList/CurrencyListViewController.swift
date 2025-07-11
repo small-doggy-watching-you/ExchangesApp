@@ -5,7 +5,6 @@ import SnapKit
 import Then
 
 class CurrencyListViewController: UIViewController {
-    
     // 객체 생성
     private let viewModel = CurrencyListViewModel()
 
@@ -35,14 +34,13 @@ class CurrencyListViewController: UIViewController {
         viewModel.action(.fetchdata)
 
         configureUI() // UI생성
-        
+
         // 마지막 저장화면으로 이동
         viewModel.onAutoNavigate = { [weak self] item in
             guard let self else { return }
             let calculatorVC = CalculatorViewController(currencyItem: item)
             self.navigationController?.setViewControllers([self, calculatorVC], animated: false)
         }
-        
 
         // 데이터 변화 감지 시 테이블 뷰 리로드
         viewModel.onStateChanged = { [weak self] _ in
@@ -60,7 +58,7 @@ class CurrencyListViewController: UIViewController {
             }
         }
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         // 자동 이동 중이 아닐 때만 저장
@@ -143,13 +141,12 @@ extension CurrencyListViewController: UITableViewDelegate, UITableViewDataSource
         let calculatorVC = CalculatorViewController(currencyItem: item)
         navigationController?.pushViewController(calculatorVC, animated: true)
     }
-    
+
     @objc private func handleAutoNavigate(_ notification: Notification) {
         guard let item = notification.object as? CurrencyItem else { return }
         let calculatorVC = CalculatorViewController(currencyItem: item)
         navigationController?.setViewControllers([self, calculatorVC], animated: false)
     }
-
 }
 
 // 서치 바 Delegate

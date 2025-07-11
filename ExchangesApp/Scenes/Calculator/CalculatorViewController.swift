@@ -44,7 +44,7 @@ class CalculatorViewController: UIViewController {
             present(alert, animated: true)
         }
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         // 마지막 화면 저장

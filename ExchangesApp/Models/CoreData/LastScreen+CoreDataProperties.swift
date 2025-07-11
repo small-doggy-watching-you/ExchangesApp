@@ -6,21 +6,16 @@
 //
 //
 
-import Foundation
 import CoreData
+import Foundation
 
-
-extension LastScreen {
-
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<LastScreen> {
+public extension LastScreen {
+    @nonobjc class func fetchRequest() -> NSFetchRequest<LastScreen> {
         return NSFetchRequest<LastScreen>(entityName: "LastScreen")
     }
 
-    @NSManaged public var screenType: String?
-    @NSManaged public var currencyCode: String?
-
+    @NSManaged var screenType: String?
+    @NSManaged var currencyCode: String?
 }
 
-extension LastScreen : Identifiable {
-
-}
+extension LastScreen: Identifiable {}

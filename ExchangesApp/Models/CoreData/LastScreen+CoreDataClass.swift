@@ -6,10 +6,8 @@
 //
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 @objc(LastScreen)
-public class LastScreen: NSManagedObject {
-
-}
+public class LastScreen: NSManagedObject {}
