@@ -9,12 +9,8 @@ import UIKit
 
 final class CalculatorViewController: UIViewController {
 
-  // MARK: - Properties
-
   private let calculatorView = CalculatorView()
   private let currencyItem: CurrencyItem
-
-  // MARK: - Init
 
   init(item: CurrencyItem) {
     self.currencyItem = item
@@ -25,16 +21,12 @@ final class CalculatorViewController: UIViewController {
     fatalError("init(coder:) has not been implemented")
   }
 
-  // MARK: - Lifecycle
-
   override func viewDidLoad() {
     super.viewDidLoad()
     setupView()
     setupActions()
     configureView()
   }
-
-  // MARK: - Setup
 
   private func setupView() {
     view.backgroundColor = .systemBackground
@@ -49,8 +41,6 @@ final class CalculatorViewController: UIViewController {
   private func configureView() {
     calculatorView.configureLabelStack(code: currencyItem.code, name: currencyItem.name)
   }
-
-  // MARK: - Calculation
 
   @objc private func handleCalculate() {
     guard let input = calculatorView.amountTextField.text,

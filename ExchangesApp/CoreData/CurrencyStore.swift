@@ -19,7 +19,7 @@ final class CurrencyStore {
     self.context = appDelegate.persistentContainer.viewContext
   }
 
-  /// 저장된 환율을 딕셔너리로 반환
+  /// 환율 데이터를 요청해 가져와 국가코드-환율을 딕셔너리로 반환하는 함수.
   func fetchRatesDictionary() throws -> [String: Double] {
     let request: NSFetchRequest<StoredCurrency> = StoredCurrency.fetchRequest()
     let currencies = try context.fetch(request)
@@ -30,7 +30,7 @@ final class CurrencyStore {
     })
   }
 
-  /// 전체 환율 데이터를 기존 데이터 제거 후 저장
+  /// 기존 환율 데이터를 요청해 가져온 뒤 모두 삭제해버리고, 새로 매개변수로 받아온 환율 아이템들로 엔티티들을 꾸려 저장하는 함수.
   func saveAllCurrencies(_ items: [CurrencyItem]) throws {
     let fetchRequest: NSFetchRequest<NSFetchRequestResult> = StoredCurrency.fetchRequest()
     let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)

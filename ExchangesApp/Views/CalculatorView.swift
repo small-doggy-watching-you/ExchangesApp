@@ -10,8 +10,6 @@ import SnapKit
 
 final class CalculatorView: UIView {
 
-  // MARK: - UI Components
-
   private let titleLabel: UILabel = {
     let label = UILabel()
     label.text = "환율 계산기"
@@ -73,8 +71,6 @@ final class CalculatorView: UIView {
     return label
   }()
 
-  // MARK: - Init
-
   override init(frame: CGRect) {
     super.init(frame: frame)
     configureUI()
@@ -83,8 +79,6 @@ final class CalculatorView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-
-  // MARK: - UI Setup
 
   private func configureUI() {
     backgroundColor = .systemBackground
@@ -120,8 +114,6 @@ final class CalculatorView: UIView {
       $0.leading.trailing.equalToSuperview().inset(24)
     }
   }
-
-  // MARK: - Public Methods
 
   public func configureLabelStack(code: String, name: String) {
     countryCodeLabel.text = code

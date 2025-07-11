@@ -8,14 +8,13 @@
 import Foundation
 
 final class ExchangeRateServiceManager {
-
+  
   private let exchangeRateService = ExchangeRateService()
   private let currencyNameService = CurrencyNameService()
   private let currencyStore = CurrencyStore()
   private let favoriteStore = FavoriteStore()
-
-  // MARK: - 통화 이름 로드
-
+  
+  /// JSON을 통해 국가코드-국가명 데이터 [코드:이름] 딕셔너리를 가져와 저장하는 함수.
   func loadCurrencyNames(completion: @escaping (Result<Void, CurrencyError>) -> Void) {
     currencyNameService.loadCurrencyNames { result in
       switch result {
@@ -27,13 +26,12 @@ final class ExchangeRateServiceManager {
       }
     }
   }
-
-  // MARK: - 환율 데이터 로딩
-
+  
+  /// API를 통해 환율 데이터를 받아오고 CurrencyItem 배열로 변환 후 즐겨찾기 반영하는 함수.
   func fetchExchangeRates(completion: @escaping (Result<[CurrencyItem], CurrencyError>) -> Void) {
     exchangeRateService.fetchSortedRates { [weak self] result in
       guard let self = self else { return }
-
+      
       switch result {
       case .success(let sortedRates):
         do {
@@ -52,15 +50,16 @@ final class ExchangeRateServiceManager {
         } catch {
           completion(.failure(.networkFailed(error)))
         }
-
+        
       case .failure(let afError):
         completion(.failure(.networkFailed(afError)))
       }
     }
   }
-
+  
+  /// 과거 환율과 현재 환율을 비교해 등락여부를 반환하는 함수.
   private func trend(from old: Double?, to new: Double) -> RateTrend? {
-    guard let old = old else { return nil }
+    guard let old = old else { return nil } // 과거 환율이 존재하지 않는 경우 trend 산출 불가
     if new > old {
       return .up
     } else if new < old {
@@ -69,9 +68,8 @@ final class ExchangeRateServiceManager {
       return .same
     }
   }
-
-  // MARK: - 즐겨찾기 동기화
-
+  
+  /// CoreData에서 즐겨찾기 리스트를 가져와 allItems에 isFavorite 값을 반영하는 함수.
   func syncFavorites(to items: inout [CurrencyItem]) {
     do {
       let favoriteCodes = try favoriteStore.fetchFavorites()
@@ -84,10 +82,9 @@ final class ExchangeRateServiceManager {
       print("즐겨찾기 동기화 실패: \(error)")
     }
   }
-
-  // MARK: - 즐겨찾기 상태 토글
-
-  func toggleFavorite(for item: CurrencyItem) {
+  
+  /// CoreData에 아이템의 즐겨찾기 상태를 반영하는 함수.
+  func updateFavoriteStatus(for item: CurrencyItem) {
     do {
       if item.isFavorite {
         try favoriteStore.addFavorite(item: item)
