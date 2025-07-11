@@ -11,22 +11,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
   var window: UIWindow?
 
-
+  let navigationController: UINavigationController = {
+    let navi = UINavigationController()
+    navi.setViewControllers([ExchangeRateViewController()], animated: false)
+    return navi
+  }()
+  //  파라미터가 있으면 디테일뷰로 넘기고, 없으면 메인으로 하게하면 되겠다
+  
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
     guard let windowScene = (scene as? UIWindowScene) else { return }
     let window = UIWindow(windowScene: windowScene)
-    window.rootViewController = UINavigationController(rootViewController: ExchangeRateViewController())
+    window.rootViewController = navigationController
     window.makeKeyAndVisible()
     self.window = window
   }
-  
-//  UINavigation
-//
-//  let navi = UINavigationController()
-//  navi.setViewControllers([MainViewController(), DetailViewController()], animated: false)
-//
-//  파라미터가 있으면 디테일뷰로 넘기고, 없으면 메인으로 하게하면 되겠다
-//
 
 
   func sceneDidDisconnect(_ scene: UIScene) {

@@ -23,6 +23,8 @@ final class CalculatorViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    print("calculatorViewDidLoad")
+    
     setupView()
     setupActions()
     configureView()

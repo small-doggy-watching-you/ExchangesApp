@@ -169,6 +169,7 @@ extension ExchangeRateViewController: UITableViewDelegate {
     
     let vc = CalculatorViewController(item: item)
     navigationController?.pushViewController(vc, animated: true)
+    navigationController?.setViewControllers([self, vc], animated: false)
     tableView.deselectRow(at: indexPath, animated: true)
   }
 
