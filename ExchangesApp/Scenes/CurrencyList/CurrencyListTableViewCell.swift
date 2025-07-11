@@ -25,7 +25,7 @@ class CurrencyListTableViewCell: UITableViewCell {
     // 국가명 라벨
     private let countryLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 14, weight: .medium)
-        $0.textColor = .gray
+        $0.textColor = .secondaryLabel
         $0.textAlignment = .right
     }
 
