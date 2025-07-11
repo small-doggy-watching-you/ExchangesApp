@@ -42,6 +42,13 @@ final class ExchangeRateCell: UITableViewCell {
     return label
   }()
   
+  private let rateTrendLabel: UILabel = {
+    let label = UILabel()
+    label.font = .systemFont(ofSize: 16)
+    label.textColor = .systemGreen
+    return label
+  }()
+  
   let favoriteButton: UIButton = {
     let button = UIButton(type: .custom)
     button.tintColor = .systemYellow
@@ -60,7 +67,7 @@ final class ExchangeRateCell: UITableViewCell {
   }
   
   private func configureUI() {
-    [labelStackView, rateLabel, favoriteButton].forEach {
+    [labelStackView, rateLabel, rateTrendLabel, favoriteButton].forEach {
       contentView.addSubview($0)
     }
     
@@ -72,8 +79,13 @@ final class ExchangeRateCell: UITableViewCell {
     rateLabel.snp.makeConstraints {
       $0.centerY.equalToSuperview()
       $0.leading.greaterThanOrEqualTo(labelStackView.snp.trailing).inset(16)
-      $0.trailing.equalTo(favoriteButton.snp.leading).offset(-16)
+      $0.trailing.equalTo(rateTrendLabel.snp.leading).offset(-8)
       $0.width.equalTo(120)
+    }
+    
+    rateTrendLabel.snp.makeConstraints {
+      $0.centerY.equalToSuperview()
+      $0.trailing.equalTo(favoriteButton.snp.leading).offset(-16)
     }
     
     favoriteButton.snp.makeConstraints {
@@ -82,10 +94,17 @@ final class ExchangeRateCell: UITableViewCell {
     }
   }
   
-  public func configureCell(code: String, name: String, rate: Double, isFavorite: Bool) {
+  public func configureCell(code: String, name: String, rate: Double, isFavorite: Bool, trend: RateTrend?) {
     countryCodeLabel.text = code
     countryNameLabel.text = name
     rateLabel.text = String(format: "%.4f", rate)
+    
+    switch trend {
+    case .up: rateTrendLabel.text = "🔼"
+    case .down: rateTrendLabel.text = "🔽"
+    case .same: rateTrendLabel.text = "➖"
+    case .none: rateTrendLabel.text = ""
+    }
     
     let imageName = isFavorite ? "star.fill" : "star"
     favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)

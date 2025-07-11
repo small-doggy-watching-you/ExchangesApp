@@ -72,14 +72,37 @@ class ExchangeRateViewController: UIViewController {
   private func fetchExchangeRate() {
     exchangeRateService.fetchSortedRates { [weak self] result in
       guard let self else { return }
+      
       switch result {
       case .success(let sortedRates):
         DispatchQueue.main.async {
-          self.allItems = sortedRates.map { (code, rate) in
-            let name = self.currencyNameService.currencyNames[code] ?? "알 수 없음"
-            return CurrencyItem(code: code, name: name, rate: rate, isFavorite: false)
+          do {
+            let previousRates = try CurrencyStore.shared.fetchRatesAsDictionary()
+            let newItems = sortedRates.map { (code, rate) in
+              let name = self.currencyNameService.currencyNames[code] ?? "알 수 없음"
+              let trend: RateTrend?
+              if let prev = previousRates[code] {
+                if rate > prev {
+                  trend = .up
+                } else if rate < prev {
+                  trend = .down
+                } else {
+                  trend = .same
+                }
+              } else {
+                trend = nil
+              }
+              
+              return CurrencyItem(code: code, name: name, rate: rate, trend: trend)
+            }
+            
+            try CurrencyStore.shared.saveAllCurrencies(newItems)
+            
+            self.allItems = newItems
+            self.syncFavorites()
+          } catch {
+            print("CoreData 오류: \(error)")
           }
-          self.syncFavorites()
         }
       case .failure(let error):
         print("데이터 로드 실패: \(error)")
@@ -188,7 +211,7 @@ extension ExchangeRateViewController: UITableViewDataSource {
       return UITableViewCell()
     }
     
-    cell.configureCell(code: item.code, name: item.name, rate: item.rate, isFavorite: item.isFavorite)
+    cell.configureCell(code: item.code, name: item.name, rate: item.rate, isFavorite: item.isFavorite, trend: item.trend)
     cell.favoriteButton.tag = indexPath.section * 10000 + indexPath.row // 정확한 위치를 식별할 수 있도록 tag 설정
     cell.favoriteButton.addTarget(self, action: #selector(handleFavoriteTapped(_:)), for: .touchUpInside) // 즐겨찾기 버튼 이벤트 연결
     
@@ -211,7 +234,7 @@ extension ExchangeRateViewController: UITableViewDelegate {
   // 섹션 헤더 설정 - 즐겨찾기에 항목 있을 때만 양쪽 헤더 표시
   func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
     let hasFavorites = isFiltering ? !filteredFavoriteItems.isEmpty : !favoriteItems.isEmpty
-
+    
     if section == 0 {
       return hasFavorites ? "즐겨찾기" : nil
     } else {
