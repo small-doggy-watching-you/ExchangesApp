@@ -9,7 +9,7 @@ final class CoreDataManager {
 
     // CoreData의 저장소(= 데이터베이스)를 앱에 로드함, 이 안에는 SQLite 백엔드가 자동으로 설정됨
     lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "FavoriteModel") // ← .xcdatamodeld 파일명
+        let container = NSPersistentContainer(name: "CurrencyModel") // ← .xcdatamodeld 파일명
         container.loadPersistentStores { _, error in
             if let error = error {
                 fatalError("failed to load persistent stores: \(error)")
