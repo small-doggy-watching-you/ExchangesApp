@@ -57,9 +57,9 @@ class CurrencyListViewModel: ViewModelProtocol {
             switch result {
             case let .success(currency):
                 self.currency = currency
-                
+
                 let favoriteCodes = CoreDataManager.shared.fetchAllCodes() // 즐겨찾기에 등록된 코드들 정보
-                
+
                 self.allItems = currency.rates.map { code, rate in
                     CurrencyItem(
                         code: code,
@@ -68,7 +68,7 @@ class CurrencyListViewModel: ViewModelProtocol {
                         isFavorited: favoriteCodes.contains(code)
                     )
                 }.sorted { $0.code < $1.code }
-                state.sortedItems = customSort(self.allItems ) // 최초에 검색된 아이템에 전체 아이템 주입
+                state.sortedItems = customSort(self.allItems) // 최초에 검색된 아이템에 전체 아이템 주입
             case let .failure(error):
                 onError?(error)
             }
@@ -81,25 +81,25 @@ class CurrencyListViewModel: ViewModelProtocol {
             .filter { $0.code.lowercased().hasPrefix(keyword.lowercased()) || $0.countryName.lowercased().hasPrefix(keyword.lowercased()) }
         state.sortedItems = customSort(searchedData)
     }
-    
+
     // 즐겨찾기 버튼 토글
-    private func favoriteToggle(_ index: Int){
+    private func favoriteToggle(_ index: Int) {
         let item = state.sortedItems[index] // 선택한 셀의 아이템
         item.isFavorited.toggle() // 즐겨찾기 정보 토글
-        
+
         if item.isFavorited {
             CoreDataManager.shared.add(code: item.code) // 추가
         } else {
             CoreDataManager.shared.remove(code: item.code) // 제거
         }
-        
+
         return state.sortedItems = customSort(state.sortedItems)
     }
-    
+
     // 커스텀 정렬함수
-    private func customSort(_ items: [CurrencyItem]) -> [CurrencyItem]{
-        items.sorted{
-            if $0.isFavorited != $1.isFavorited{ // 둘의 즐겨찾기 여부가 다르면
+    private func customSort(_ items: [CurrencyItem]) -> [CurrencyItem] {
+        items.sorted {
+            if $0.isFavorited != $1.isFavorited { // 둘의 즐겨찾기 여부가 다르면
                 // $0이 true고 $1이 false면 true를 반환 -> $0이 $1보다 먼저와야 하므로 즐겨찾기 순 정렬
                 return $0.isFavorited && !$1.isFavorited
             } else {
@@ -108,5 +108,4 @@ class CurrencyListViewModel: ViewModelProtocol {
             }
         }
     }
-    
 }

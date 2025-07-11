@@ -26,7 +26,7 @@ class CurrencyListViewController: UIViewController {
         $0.font = .systemFont(ofSize: 14, weight: .medium)
         $0.isHidden = true
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 

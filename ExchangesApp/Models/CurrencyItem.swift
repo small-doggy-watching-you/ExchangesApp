@@ -7,6 +7,7 @@ class CurrencyItem {
         self.countryName = countryName
         self.isFavorited = isFavorited
     }
+
     let code: String
     let rate: Double
     let countryName: String

@@ -6,20 +6,15 @@
 //
 //
 
-import Foundation
 import CoreData
+import Foundation
 
-
-extension FavoriteCurrency {
-
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<FavoriteCurrency> {
+public extension FavoriteCurrency {
+    @nonobjc class func fetchRequest() -> NSFetchRequest<FavoriteCurrency> {
         return NSFetchRequest<FavoriteCurrency>(entityName: "FavoriteCurrency")
     }
 
-    @NSManaged public var code: String?
-
+    @NSManaged var code: String?
 }
 
-extension FavoriteCurrency : Identifiable {
-
-}
+extension FavoriteCurrency: Identifiable {}
