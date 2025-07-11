@@ -167,10 +167,14 @@ extension ExchangeRateViewController: UITableViewDelegate {
     backItem.title = exchangeRateView.titleLabel.text ?? "뒤로"
     navigationItem.backBarButtonItem = backItem
     
+    /// 화면이 전환될 때 스크린 상황을 저장합니다.
+    try? AppStateStore().saveLastScreenState(screen: "calculator", item: item)
+    
     let vc = CalculatorViewController(item: item)
     navigationController?.pushViewController(vc, animated: true)
     navigationController?.setViewControllers([self, vc], animated: false)
     tableView.deselectRow(at: indexPath, animated: true)
+    
   }
 
   func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

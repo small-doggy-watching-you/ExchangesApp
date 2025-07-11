@@ -7,11 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3633843A2E2111E000C99194 /* AppState+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363384382E2111E000C99194 /* AppState+CoreDataClass.swift */; };
+		3633843B2E2111E000C99194 /* AppState+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363384392E2111E000C99194 /* AppState+CoreDataProperties.swift */; };
 		367A1A4E2E1B9B5A005766B6 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 367A1A4D2E1B9B5A005766B6 /* SnapKit */; };
 		367A1A512E1B9B6F005766B6 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 367A1A502E1B9B6F005766B6 /* Alamofire */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		363384382E2111E000C99194 /* AppState+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "AppState+CoreDataClass.swift"; path = "ExchangesApp/CoreData/CoreDataModel/AppState+CoreDataClass.swift"; sourceTree = "<group>"; };
+		363384392E2111E000C99194 /* AppState+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "AppState+CoreDataProperties.swift"; path = "ExchangesApp/CoreData/CoreDataModel/AppState+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		367508D92E1B6A9E004A775E /* ExchangesApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExchangesApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -52,6 +56,8 @@
 		367508D02E1B6A9E004A775E = {
 			isa = PBXGroup;
 			children = (
+				363384382E2111E000C99194 /* AppState+CoreDataClass.swift */,
+				363384392E2111E000C99194 /* AppState+CoreDataProperties.swift */,
 				367508DB2E1B6A9E004A775E /* ExchangesApp */,
 				367508DA2E1B6A9E004A775E /* Products */,
 			);
@@ -145,6 +151,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3633843A2E2111E000C99194 /* AppState+CoreDataClass.swift in Sources */,
+				3633843B2E2111E000C99194 /* AppState+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

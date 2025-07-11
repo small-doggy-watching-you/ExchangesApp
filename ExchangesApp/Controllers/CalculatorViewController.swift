@@ -29,6 +29,14 @@ final class CalculatorViewController: UIViewController {
     setupActions()
     configureView()
   }
+  
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    
+    if self.isMovingFromParent { // 네비게이션 스택에서 pop되어 사라지고 있는 중일 때
+      try? AppStateStore().saveLastScreenState(screen: "list", item: nil)
+    }
+  }
 
   private func setupView() {
     view.backgroundColor = .systemBackground

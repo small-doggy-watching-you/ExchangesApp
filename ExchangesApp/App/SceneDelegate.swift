@@ -8,20 +8,26 @@
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
+  
   var window: UIWindow?
-
-  let navigationController: UINavigationController = {
-    let navi = UINavigationController()
-    navi.setViewControllers([ExchangeRateViewController()], animated: false)
-    return navi
-  }()
-  //  파라미터가 있으면 디테일뷰로 넘기고, 없으면 메인으로 하게하면 되겠다
   
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
     guard let windowScene = (scene as? UIWindowScene) else { return }
     let window = UIWindow(windowScene: windowScene)
-    window.rootViewController = navigationController
+    
+    let navi = UINavigationController()
+    
+    if let (screen, item) = try? AppStateStore().fetchLastScreenState() {
+      if screen == "calculator", let item = item {
+        navi.setViewControllers([ExchangeRateViewController(), CalculatorViewController(item: item)], animated: false)
+      } else {
+        navi.setViewControllers([ExchangeRateViewController()], animated: false)
+      }
+    } else {
+      navi.setViewControllers([ExchangeRateViewController()], animated: false)
+    }
+    
+    window.rootViewController = navi
     window.makeKeyAndVisible()
     self.window = window
   }
