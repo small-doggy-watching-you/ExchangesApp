@@ -66,6 +66,8 @@ class CurrencyListViewModel: ViewModelProtocol {
                     else { return nil }
                     return decoded
                 }()
+                
+                print(oldRates?["ALL"], oldRates?["AMD"])
                 let favoriteCodes = CoreDataManager.shared.fetchAllFavoriteCodes() // 즐겨찾기에 등록된 코드들 정보
                 self.allItems = currency.rates.map { code, rate in
                     CurrencyItem(
@@ -73,7 +75,7 @@ class CurrencyListViewModel: ViewModelProtocol {
                         rate: rate,
                         countryName: CurrencyCodeMap.codeToNationName[code] ?? "",
                         isFavorited: favoriteCodes.contains(code),
-                        trendSymbolText: SymbolNamingService.allocateSymbol(oldRate: oldRates?[code], newRate: rate),
+                        trendSymbol: SymbolMakingService.allocateTrendSymbol(oldRate: oldRates?[code], newRate: rate),
 
                     )
                 }.sorted { $0.code < $1.code }
@@ -102,7 +104,6 @@ class CurrencyListViewModel: ViewModelProtocol {
             CoreDataManager.shared.removeFavorite(code: item.code) // 제거
         }
         
-        print(state.sortedItems[index].trendSymbolText)
         return state.sortedItems = customSort(state.sortedItems)
     }
     
