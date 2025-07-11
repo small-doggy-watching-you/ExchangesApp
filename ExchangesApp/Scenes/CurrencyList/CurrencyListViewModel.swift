@@ -7,37 +7,37 @@ class CurrencyListViewModel: ViewModelProtocol {
         case updateSearchedData(String) // 서치 바에 검색어 입력시
         case favoriteToggle(Int)
     }
-
+    
     struct State {
         var sortedItems: [CurrencyItem] // 검색한 아이템
         var numberOfItems: Int { sortedItems.count } // 테이블 뷰에서 사용할 셀 개수
     }
-
+    
     // state
     private(set) var state: State {
         didSet {
             onStateChanged?(state)
         }
     }
-
+    
     // 프로퍼티 선언
     var allItems: [CurrencyItem] = [] // 전체 아이템
     private var currency: Currency? // JSON 파싱 통째로 보존
-
+    
     // 클로저
     var onStateChanged: ((State) -> Void)? // 데이터 변화 감지
     var onError: ((Error) -> Void)? // 에러 발생 전달
-
+    
     // 객체 선언
     private let dataService = DataService()
-
+    
     // init
     init() {
         state = State(
             sortedItems: [],
         )
     }
-
+    
     // action
     func action(_ action: Action) {
         switch action {
@@ -49,7 +49,7 @@ class CurrencyListViewModel: ViewModelProtocol {
             favoriteToggle(index)
         }
     }
-
+    
     // 데이터 파싱 후 데이터 보존
     private func fetchData() {
         dataService.fetchData { [weak self] result in
@@ -57,15 +57,24 @@ class CurrencyListViewModel: ViewModelProtocol {
             switch result {
             case let .success(currency):
                 self.currency = currency
-
-                let favoriteCodes = CoreDataManager.shared.fetchAllCodes() // 즐겨찾기에 등록된 코드들 정보
-
+                CoreDataManager.shared.addCurrencyData(currency) // 코어 데이터에 저장
+                let oldCurrecny = CoreDataManager.shared.beforeCurrencyData(before: currency.timeLastUpdateUtc)
+                let oldRates: [String: Double]? = {
+                    guard let oldRates = oldCurrecny?.ratesJSON,
+                          let data = oldRates.data(using: .utf8),
+                          let decoded = try? JSONDecoder().decode([String: Double].self, from: data)
+                    else { return nil }
+                    return decoded
+                }()
+                let favoriteCodes = CoreDataManager.shared.fetchAllFavoriteCodes() // 즐겨찾기에 등록된 코드들 정보
                 self.allItems = currency.rates.map { code, rate in
                     CurrencyItem(
                         code: code,
                         rate: rate,
                         countryName: CurrencyCodeMap.codeToNationName[code] ?? "",
-                        isFavorited: favoriteCodes.contains(code)
+                        isFavorited: favoriteCodes.contains(code),
+                        trendSymbolText: SymbolNamingService.allocateSymbol(oldRate: oldRates?[code], newRate: rate),
+
                     )
                 }.sorted { $0.code < $1.code }
                 state.sortedItems = customSort(self.allItems) // 최초에 검색된 아이템에 전체 아이템 주입
@@ -74,28 +83,29 @@ class CurrencyListViewModel: ViewModelProtocol {
             }
         }
     }
-
+    
     // 서치바에 입력된 키워드로 검색
     private func updateSearchedData(_ keyword: String) {
         let searchedData = allItems.map { $0 }
             .filter { $0.code.lowercased().hasPrefix(keyword.lowercased()) || $0.countryName.lowercased().hasPrefix(keyword.lowercased()) }
         state.sortedItems = customSort(searchedData)
     }
-
+    
     // 즐겨찾기 버튼 토글
     private func favoriteToggle(_ index: Int) {
         let item = state.sortedItems[index] // 선택한 셀의 아이템
         item.isFavorited.toggle() // 즐겨찾기 정보 토글
-
+        
         if item.isFavorited {
-            CoreDataManager.shared.add(code: item.code) // 추가
+            CoreDataManager.shared.addFavorite(code: item.code) // 추가
         } else {
-            CoreDataManager.shared.remove(code: item.code) // 제거
+            CoreDataManager.shared.removeFavorite(code: item.code) // 제거
         }
-
+        
+        print(state.sortedItems[index].trendSymbolText)
         return state.sortedItems = customSort(state.sortedItems)
     }
-
+    
     // 커스텀 정렬함수
     private func customSort(_ items: [CurrencyItem]) -> [CurrencyItem] {
         items.sorted {
@@ -108,4 +118,6 @@ class CurrencyListViewModel: ViewModelProtocol {
             }
         }
     }
+    
+    
 }

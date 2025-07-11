@@ -35,7 +35,7 @@ final class CoreDataManager {
     }
 
     // 중복여부 확인
-    func contains(code: String) -> Bool {
+    func containFavoriteCode(code: String) -> Bool {
         let fetch: NSFetchRequest<FavoriteCurrency> = FavoriteCurrency.fetchRequest() // fetch 요청
         // SELECT * FROM FavoriteCurrency WHERE code == 'USD' 와 같은 쿼리 역할
         fetch.predicate = NSPredicate(format: "code == %@", code)
@@ -44,15 +44,15 @@ final class CoreDataManager {
     }
 
     // 즐겨찾기 추가
-    func add(code: String) {
-        guard !contains(code: code) else { return } // 중복저장 방지
+    func addFavorite(code: String) {
+        guard !containFavoriteCode(code: code) else { return } // 중복저장 방지
         let entity = FavoriteCurrency(context: context) // 컨텍스트에 연결
         entity.code = code // 생성한 FavoriteCurrency 객체의 code 속성에 값을 설정
         saveContext() // 실제 DB에 저장 요청을 보냄
     }
 
     // 즐겨찾기 삭제
-    func remove(code: String) {
+    func removeFavorite(code: String) {
         // contain에서 사용한 fetch로 찾음
         let fetch: NSFetchRequest<FavoriteCurrency> = FavoriteCurrency.fetchRequest()
         fetch.predicate = NSPredicate(format: "code == %@", code)
@@ -66,9 +66,77 @@ final class CoreDataManager {
     }
 
     // 전체 코드 조회
-    func fetchAllCodes() -> [String] {
+    func fetchAllFavoriteCodes() -> [String] {
         let fetch: NSFetchRequest<FavoriteCurrency> = FavoriteCurrency.fetchRequest()
         let results = (try? context.fetch(fetch)) ?? [] // SELECT ALL
         return results.compactMap { $0.code } // nil이 아닌 값 추출해서 배열로 반환
     }
+    
+    /* 환율정보 저장관련 */
+    
+    // Currency 저장
+    func addCurrencyData(_ currency: Currency){
+        let dateKey = formatDate(currency.timeLastUpdateUtc)
+        guard isNewCurrency(dateKey: dateKey) else { return }
+        let snapshot = CurrencySnapshot(context: context)
+        snapshot.dateKey = dateKey
+        snapshot.timestamp = currency.timeLastUpdateUtc
+        snapshot.baseCode = currency.baseCode
+        snapshot.ratesJSON = encodeRates(currency.rates)
+        saveContext()
+        
+    }
+    
+    // dateKey용 날짜변환
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter.string(from: date)
+    }
+    
+    // rate 인코드
+    private func encodeRates(_ rates: [String: Double]) -> String {
+        do {
+            let data = try JSONEncoder().encode(rates)
+            return String(data: data, encoding: .utf8)!
+        } catch {
+            print("encodeRates Error: \(error)")
+            return ""
+        }
+    }
+    
+    // 새 환율 데이터인지 체크하는 함수
+    func isNewCurrency(dateKey: String) -> Bool {
+        let fetch: NSFetchRequest<CurrencySnapshot> = CurrencySnapshot.fetchRequest()
+        fetch.predicate = NSPredicate(format: "dateKey == %@", dateKey)
+        let result = try? context.fetch(fetch)
+        return result?.isEmpty ?? true
+    }
+    
+    // 가장 최근의 데이터를 추출
+    func beforeCurrencyData(before date: Date) -> CurrencySnapshot? {
+        let fetch: NSFetchRequest<CurrencySnapshot> = CurrencySnapshot.fetchRequest()
+        fetch.predicate = NSPredicate(format: "timestamp < %@", date as NSDate)
+        fetch.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+        fetch.fetchLimit = 1
+        return try? context.fetch(fetch).first
+    }
+    
+    // 모든 데이터 추출함수
+    func fetchAllCurrencyData() -> [CurrencySnapshot] {
+        let fetch: NSFetchRequest<CurrencySnapshot> = CurrencySnapshot.fetchRequest()
+        fetch.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+        return (try? context.fetch(fetch)) ?? []
+    }
+    
+    // 초기 실행시 더미 투입함수
+    func insertDummyIfNotExist() {
+        let allData = fetchAllCurrencyData()
+        guard allData.isEmpty else { return }
+        let dummyData = TestData.testCurrencyDummy
+        addCurrencyData(dummyData)
+    }
+
+    
 }
