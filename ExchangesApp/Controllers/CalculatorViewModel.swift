@@ -9,7 +9,9 @@
 
 class CalculatorViewModel: ViewModelProtocol {
   
-  private(set) var state: State
+  private(set) var state: State {
+    didSet { onStateChanged?(state) }
+  }
   
   var onStateChanged: ((State) -> Void)?
   
@@ -20,8 +22,7 @@ class CalculatorViewModel: ViewModelProtocol {
   func action(_ action: Action) {
     switch action {
     case .calculate(let number): // 숫자를 받아서
-      state.result = number * state.currencyItem.rate
-      onStateChanged?(state)
+      state.input = number
     }
   }
 }
@@ -32,7 +33,11 @@ extension CalculatorViewModel {
   }
   
   struct State { // 상태 관리
-    var result: Double = 0
     let currencyItem: CurrencyItem
+    var input: Double = 0
+    
+    var result: Double {
+      input * currencyItem.rate
+    }
   }
 }
