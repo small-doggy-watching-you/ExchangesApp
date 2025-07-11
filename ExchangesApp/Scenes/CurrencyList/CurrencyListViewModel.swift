@@ -57,11 +57,15 @@ class CurrencyListViewModel: ViewModelProtocol {
             switch result {
             case let .success(currency):
                 self.currency = currency
+                
+                let favoriteCodes = CoreDataManager.shared.fetchAllCodes() // 즐겨찾기에 등록된 코드들 정보
+                
                 self.allItems = currency.rates.map { code, rate in
                     CurrencyItem(
                         code: code,
                         rate: rate,
-                        countryName: CurrencyCodeMap.codeToNationName[code] ?? ""
+                        countryName: CurrencyCodeMap.codeToNationName[code] ?? "",
+                        isFavorited: favoriteCodes.contains(code)
                     )
                 }.sorted { $0.code < $1.code }
                 state.sortedItems = customSort(self.allItems ) // 최초에 검색된 아이템에 전체 아이템 주입
@@ -75,12 +79,20 @@ class CurrencyListViewModel: ViewModelProtocol {
     private func updateSearchedData(_ keyword: String) {
         let searchedData = allItems.map { $0 }
             .filter { $0.code.lowercased().hasPrefix(keyword.lowercased()) || $0.countryName.lowercased().hasPrefix(keyword.lowercased()) }
-        state.sortedItems = searchedData
+        state.sortedItems = customSort(searchedData)
     }
     
     // 즐겨찾기 버튼 토글
     private func favoriteToggle(_ index: Int){
-        state.sortedItems[index].isFavorited.toggle()
+        let item = state.sortedItems[index] // 선택한 셀의 아이템
+        item.isFavorited.toggle() // 즐겨찾기 정보 토글
+        
+        if item.isFavorited {
+            CoreDataManager.shared.add(code: item.code) // 추가
+        } else {
+            CoreDataManager.shared.remove(code: item.code) // 제거
+        }
+        
         return state.sortedItems = customSort(state.sortedItems)
     }
     
