@@ -7,6 +7,8 @@ import Then
 class CurrencyListTableViewCell: UITableViewCell {
     // 테이블 뷰 셀 식별id
     static let id = "CurrencyListTableViewCell"
+    
+    var onFavoriteTapped: (() -> Void)?
 
     // 라벨 스택 뷰
     private let labelStackView = UIStackView().then {
@@ -33,6 +35,11 @@ class CurrencyListTableViewCell: UITableViewCell {
         $0.textAlignment = .right
         $0.font = .systemFont(ofSize: 16, weight: .medium)
     }
+    
+    // 즐겨찾기 버튼
+    private let favoriteButton = UIButton(type: .custom).then {
+        $0.tintColor = .systemYellow
+    }
 
     // init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -44,9 +51,15 @@ class CurrencyListTableViewCell: UITableViewCell {
     func setupLayout() {
         labelStackView.addArrangedSubview(currencyLabel)
         labelStackView.addArrangedSubview(countryLabel)
+        
+        // 즐겨찾기 버튼에는 액션만 주입 -> 내용 정의는 VC 셀 정의 부분에서
+        favoriteButton.addAction(UIAction { [weak self] _ in
+            self?.onFavoriteTapped?()
+        }, for: .touchUpInside)
 
         contentView.addSubview(labelStackView)
         contentView.addSubview(rateLabel)
+        contentView.addSubview(favoriteButton)
 
         // 오토 레이아웃
         labelStackView.snp.makeConstraints {
@@ -56,17 +69,28 @@ class CurrencyListTableViewCell: UITableViewCell {
 
         rateLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.trailing.equalToSuperview().offset(-16)
+            $0.trailing.equalTo(favoriteButton.snp.leading).offset(-8)
             $0.leading.greaterThanOrEqualTo(labelStackView.snp.trailing).offset(16)
             $0.width.equalTo(120)
+        }
+        
+        favoriteButton.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.trailing.equalToSuperview().offset(-16)
         }
     }
 
     // 셀 생성 함수
     func configureCell(_ item: CurrencyItem) {
+        // 라벨 텍스트명 주입
         currencyLabel.text = item.code
         rateLabel.text = String(format: "%.4f", item.rate)
         countryLabel.text = item.countryName
+        
+        // 즐겨찾기 버튼 별 모양 판정
+        let configuration = UIImage.SymbolConfiguration(pointSize: 20)
+        let favoriteImageName = item.isFavorited == true ? "star.fill" : "star"
+        favoriteButton.setImage(UIImage(systemName: favoriteImageName, withConfiguration: configuration), for: .normal)
     }
 
     @available(*, unavailable)

@@ -1,7 +1,14 @@
 
 // 화면 출력용 데이터 모델
-struct CurrencyItem {
+class CurrencyItem {
+    init(code: String, rate: Double, countryName: String) {
+        self.code = code
+        self.rate = rate
+        self.countryName = countryName
+        self.isFavorited = false
+    }
     let code: String
     let rate: Double
     let countryName: String
+    var isFavorited: Bool = false
 }

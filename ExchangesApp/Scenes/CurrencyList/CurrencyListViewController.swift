@@ -26,7 +26,7 @@ class CurrencyListViewController: UIViewController {
         $0.font = .systemFont(ofSize: 14, weight: .medium)
         $0.isHidden = true
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -107,7 +107,11 @@ extension CurrencyListViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = viewModel.state.sortedItems[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "CurrencyListTableViewCell", for: indexPath) as! CurrencyListTableViewCell
-        cell.configureCell(item)
+        cell.configureCell(item) // 셀 생성
+        // 셀에서 즐겨찾기 버튼이 눌리면 뷰모델의 토글함수 실행 클로저
+        cell.onFavoriteTapped = { [viewModel] in
+            viewModel.action(.favoriteToggle(indexPath.row))
+        }
         return cell
     }
 

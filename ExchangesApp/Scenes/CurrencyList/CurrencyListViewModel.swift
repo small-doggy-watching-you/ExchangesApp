@@ -5,6 +5,7 @@ class CurrencyListViewModel: ViewModelProtocol {
     enum Action {
         case fetchdata // 데이터 파싱
         case updateSearchedData(String) // 서치 바에 검색어 입력시
+        case favoriteToggle(Int)
     }
 
     struct State {
@@ -44,6 +45,8 @@ class CurrencyListViewModel: ViewModelProtocol {
             fetchData()
         case let .updateSearchedData(keyword):
             updateSearchedData(keyword)
+        case let .favoriteToggle(index):
+            favoriteToggle(index)
         }
     }
 
@@ -61,7 +64,7 @@ class CurrencyListViewModel: ViewModelProtocol {
                         countryName: CurrencyCodeMap.codeToNationName[code] ?? ""
                     )
                 }.sorted { $0.code < $1.code }
-                state.sortedItems = self.allItems // 최초에 검색된 아이템에 전체 아이템 주입
+                state.sortedItems = customSort(self.allItems ) // 최초에 검색된 아이템에 전체 아이템 주입
             case let .failure(error):
                 onError?(error)
             }
@@ -74,4 +77,24 @@ class CurrencyListViewModel: ViewModelProtocol {
             .filter { $0.code.lowercased().hasPrefix(keyword.lowercased()) || $0.countryName.lowercased().hasPrefix(keyword.lowercased()) }
         state.sortedItems = searchedData
     }
+    
+    // 즐겨찾기 버튼 토글
+    private func favoriteToggle(_ index: Int){
+        state.sortedItems[index].isFavorited.toggle()
+        return state.sortedItems = customSort(state.sortedItems)
+    }
+    
+    // 커스텀 정렬함수
+    private func customSort(_ items: [CurrencyItem]) -> [CurrencyItem]{
+        items.sorted{
+            if $0.isFavorited != $1.isFavorited{ // 둘의 즐겨찾기 여부가 다르면
+                // $0이 true고 $1이 false면 true를 반환 -> $0이 $1보다 먼저와야 하므로 즐겨찾기 순 정렬
+                return $0.isFavorited && !$1.isFavorited
+            } else {
+                // 즐겨찾기 여부가 같으면 code 알파벳순
+                return $0.code < $1.code
+            }
+        }
+    }
+    
 }
