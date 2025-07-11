@@ -8,17 +8,30 @@
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
+  
   var window: UIWindow?
-
-
+  
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
     guard let windowScene = (scene as? UIWindowScene) else { return }
     let window = UIWindow(windowScene: windowScene)
-    window.rootViewController = UINavigationController(rootViewController: ViewController())
+    
+    let navi = UINavigationController()
+    
+    if let (screen, item) = try? AppStateStore().fetchLastScreenState() {
+      if screen == "calculator", let item = item {
+        navi.setViewControllers([ExchangeRateViewController(), CalculatorViewController(item: item)], animated: false)
+      } else {
+        navi.setViewControllers([ExchangeRateViewController()], animated: false)
+      }
+    } else {
+      navi.setViewControllers([ExchangeRateViewController()], animated: false)
+    }
+    
+    window.rootViewController = navi
     window.makeKeyAndVisible()
     self.window = window
   }
+
 
   func sceneDidDisconnect(_ scene: UIScene) {
     // Called as the scene is being released by the system.
