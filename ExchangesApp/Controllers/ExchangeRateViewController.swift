@@ -11,23 +11,22 @@
 import UIKit
 
 final class ExchangeRateViewController: UIViewController {
-
-  // MARK: - Properties
   
   private let exchangeRateView = ExchangeRateView()
   private let serviceManager = ExchangeRateServiceManager()
   
-  private var allItems = [CurrencyItem]()
-  private var isFiltering = false
-  private var filteredAllItems = [CurrencyItem]()
-  private var filteredFavoriteItems = [CurrencyItem]()
-
-  // MARK: - Lifecycle
+  private var allItems = [CurrencyItem]()               // 전체 환율 데이터
+  private var isFiltering = false                       // 검색 중 여부 플래그
+  private var filteredAllItems = [CurrencyItem]()       // 필터링된 전체 항목
+  private var filteredFavoriteItems = [CurrencyItem]()  // 필터링된 즐겨찾기 항목
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    print("exchangeRateViewDidLoad")
+    
     setupView()
     setupDelegates()
+    
     loadCurrencyNames()
     fetchExchangeRates()
   }
@@ -153,6 +152,11 @@ extension ExchangeRateViewController: UITableViewDelegate {
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     guard let item = item(at: indexPath) else { return }
+    
+    let backItem = UIBarButtonItem()
+    backItem.title = exchangeRateView.titleLabel.text ?? "뒤로"
+    navigationItem.backBarButtonItem = backItem
+    
     let vc = CalculatorViewController(item: item)
     navigationController?.pushViewController(vc, animated: true)
     tableView.deselectRow(at: indexPath, animated: true)
