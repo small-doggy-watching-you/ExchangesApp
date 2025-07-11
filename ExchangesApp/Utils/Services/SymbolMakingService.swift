@@ -7,9 +7,9 @@
 
 enum SymbolMakingService {
     enum TrendSymbol: String {
-        case upward = "arrowtriangle.up.square.fill"
-        case downward = "arrowtriangle.down.square.fill"
-        case blank = "square"
+        case upward = "arrowtriangle.up.square.fill" // 상승 심볼
+        case downward = "arrowtriangle.down.square.fill" // 하락 심볼
+        case blank = "square" // 빈칸용 네모
     }
 
     static func allocateTrendSymbol(oldRate: Double?, newRate: Double) -> TrendSymbol {

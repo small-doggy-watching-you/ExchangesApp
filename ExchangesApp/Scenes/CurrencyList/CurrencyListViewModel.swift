@@ -57,8 +57,9 @@ class CurrencyListViewModel: ViewModelProtocol {
             switch result {
             case let .success(currency):
                 self.currency = currency
-                CoreDataManager.shared.addCurrencyData(currency) // 코어 데이터에 저장
-                let oldCurrecny = CoreDataManager.shared.beforeCurrencyData(before: currency.timeLastUpdateUtc)
+                CoreDataManager.shared.addCurrencyData(currency) //파싱 데이터 코어 데이터에 저장
+                let oldCurrecny = CoreDataManager.shared.beforeCurrencyData(before: currency.timeLastUpdateUtc) // 오늘 이전 데이터 중 가장 최근 데이터 추출
+                // rates가 JSON으로 인코딩되어 DB(코어 데이터)에 들어가 있으므로 디코딩
                 let oldRates: [String: Double]? = {
                     guard let oldRates = oldCurrecny?.ratesJSON,
                           let data = oldRates.data(using: .utf8),
@@ -67,8 +68,7 @@ class CurrencyListViewModel: ViewModelProtocol {
                     return decoded
                 }()
 
-                print(oldRates?["ALL"], oldRates?["AMD"])
-                let favoriteCodes = CoreDataManager.shared.fetchAllFavoriteCodes() // 즐겨찾기에 등록된 코드들 정보
+                let favoriteCodes = CoreDataManager.shared.fetchAllFavoriteCodes() // 즐겨찾기에 등록된 코드정보 획득
                 self.allItems = currency.rates.map { code, rate in
                     CurrencyItem(
                         code: code,
@@ -103,7 +103,7 @@ class CurrencyListViewModel: ViewModelProtocol {
             CoreDataManager.shared.removeFavorite(code: item.code) // 제거
         }
 
-        return state.sortedItems = customSort(state.sortedItems)
+        return state.sortedItems = customSort(state.sortedItems) // 정렬
     }
 
     // 커스텀 정렬함수
