@@ -71,11 +71,11 @@ final class CoreDataManager {
         let results = (try? context.fetch(fetch)) ?? [] // SELECT ALL
         return results.compactMap { $0.code } // nil이 아닌 값 추출해서 배열로 반환
     }
-    
+
     /* 환율정보 저장관련 */
-    
+
     // Currency 저장
-    func addCurrencyData(_ currency: Currency){
+    func addCurrencyData(_ currency: Currency) {
         let dateKey = formatDate(currency.timeLastUpdateUtc)
         guard isNewCurrency(dateKey: dateKey) else { return }
         let snapshot = CurrencySnapshot(context: context)
@@ -84,9 +84,8 @@ final class CoreDataManager {
         snapshot.baseCode = currency.baseCode
         snapshot.ratesJSON = encodeRates(currency.rates)
         saveContext()
-        
     }
-    
+
     // dateKey용 날짜변환
     private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
@@ -94,7 +93,7 @@ final class CoreDataManager {
         formatter.locale = Locale(identifier: "en_US_POSIX")
         return formatter.string(from: date)
     }
-    
+
     // rate 인코드
     private func encodeRates(_ rates: [String: Double]) -> String {
         do {
@@ -105,7 +104,7 @@ final class CoreDataManager {
             return ""
         }
     }
-    
+
     // 새 환율 데이터인지 체크하는 함수
     func isNewCurrency(dateKey: String) -> Bool {
         let fetch: NSFetchRequest<CurrencySnapshot> = CurrencySnapshot.fetchRequest()
@@ -113,7 +112,7 @@ final class CoreDataManager {
         let result = try? context.fetch(fetch)
         return result?.isEmpty ?? true
     }
-    
+
     // 가장 최근의 데이터를 추출
     func beforeCurrencyData(before date: Date) -> CurrencySnapshot? {
         let fetch: NSFetchRequest<CurrencySnapshot> = CurrencySnapshot.fetchRequest()
@@ -122,14 +121,14 @@ final class CoreDataManager {
         fetch.fetchLimit = 1
         return try? context.fetch(fetch).first
     }
-    
+
     // 모든 데이터 추출함수
     func fetchAllCurrencyData() -> [CurrencySnapshot] {
         let fetch: NSFetchRequest<CurrencySnapshot> = CurrencySnapshot.fetchRequest()
         fetch.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
         return (try? context.fetch(fetch)) ?? []
     }
-    
+
     // 초기 실행시 더미 투입함수
     func insertDummyIfNotExist() {
         let allData = fetchAllCurrencyData()
@@ -137,6 +136,4 @@ final class CoreDataManager {
         let dummyData = TestData.testCurrencyDummy
         addCurrencyData(dummyData)
     }
-
-    
 }

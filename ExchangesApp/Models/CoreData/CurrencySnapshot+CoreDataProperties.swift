@@ -6,23 +6,18 @@
 //
 //
 
-import Foundation
 import CoreData
+import Foundation
 
-
-extension CurrencySnapshot {
-
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<CurrencySnapshot> {
+public extension CurrencySnapshot {
+    @nonobjc class func fetchRequest() -> NSFetchRequest<CurrencySnapshot> {
         return NSFetchRequest<CurrencySnapshot>(entityName: "CurrencySnapshot")
     }
 
-    @NSManaged public var baseCode: String?
-    @NSManaged public var ratesJSON: String?
-    @NSManaged public var dateKey: String?
-    @NSManaged public var timestamp: Date?
-
+    @NSManaged var baseCode: String?
+    @NSManaged var ratesJSON: String?
+    @NSManaged var dateKey: String?
+    @NSManaged var timestamp: Date?
 }
 
-extension CurrencySnapshot : Identifiable {
-
-}
+extension CurrencySnapshot: Identifiable {}

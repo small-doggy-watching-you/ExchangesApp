@@ -35,9 +35,10 @@ class CurrencyListTableViewCell: UITableViewCell {
         $0.textAlignment = .right
         $0.font = .systemFont(ofSize: 16, weight: .medium)
     }
+
     // 상승하락 버튼
     private let trendImageView = UIImageView()
-    
+
     // 즐겨찾기 버튼
     private let favoriteButton = UIButton(type: .custom).then {
         $0.tintColor = .systemYellow
@@ -76,7 +77,7 @@ class CurrencyListTableViewCell: UITableViewCell {
             $0.leading.greaterThanOrEqualTo(labelStackView.snp.trailing).offset(16)
             $0.width.equalTo(120)
         }
-        
+
         trendImageView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.trailing.equalTo(favoriteButton.snp.leading).offset(-8)
@@ -94,9 +95,9 @@ class CurrencyListTableViewCell: UITableViewCell {
         currencyLabel.text = item.code
         rateLabel.text = String(format: "%.4f", item.rate)
         countryLabel.text = item.countryName
-        
+
         // 상승하락 심볼
-        if item.trendSymbol == .blank{
+        if item.trendSymbol == .blank {
             let trendConfiguration = UIImage.SymbolConfiguration(pointSize: 20)
             trendImageView.image = UIImage(systemName: item.trendSymbol.rawValue, withConfiguration: trendConfiguration)
             trendImageView.isHidden = true
@@ -105,7 +106,7 @@ class CurrencyListTableViewCell: UITableViewCell {
             trendImageView.image = UIImage(systemName: item.trendSymbol.rawValue, withConfiguration: trendConfiguration)
             trendImageView.isHidden = false
         }
-        
+
         // 즐겨찾기 버튼 별 모양 판정
         let favoriteConfiguration = UIImage.SymbolConfiguration(pointSize: 20)
         let favoriteImageName = item.isFavorited == true ? "star.fill" : "star"

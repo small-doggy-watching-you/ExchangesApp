@@ -14,5 +14,4 @@ class CurrencyItem {
     let countryName: String
     var isFavorited: Bool = false
     let trendSymbol: SymbolMakingService.TrendSymbol
-    
 }
