@@ -110,6 +110,7 @@ final class CoreDataManager {
         let fetch: NSFetchRequest<CurrencySnapshot> = CurrencySnapshot.fetchRequest()
         fetch.predicate = NSPredicate(format: "dateKey == %@", dateKey)
         let result = try? context.fetch(fetch)
+        cleanUpOldCurrencySnapshots() // 오래된 데이터 삭제 함수 호출
         return result?.isEmpty ?? true
     }
 
@@ -136,4 +137,21 @@ final class CoreDataManager {
         let dummyData = TestData.testCurrencyDummy
         addCurrencyData(dummyData)
     }
+    
+    // 5건이 넘으면 삭제(임시)
+    func cleanUpOldCurrencySnapshots(keeping maxCount: Int = 5) {
+        let fetch: NSFetchRequest<CurrencySnapshot> = CurrencySnapshot.fetchRequest()
+        fetch.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: true)] // 오래된 순
+        // if let 구문 ,로 이어가면 AND의 의미
+        if let results = try? context.fetch(fetch), results.count > maxCount {
+            // result 바인딩 + 카운트가 허용숫자를 넘었을 때 실행
+            let excess = results.count - maxCount
+            for i in 0..<excess {
+                context.delete(results[i])
+            }
+            print("Deleted \(excess) old CurrencySnapshot(s).")
+            saveContext()
+        }
+    }
+
 }
