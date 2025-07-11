@@ -9,7 +9,9 @@ import UIKit
 import SnapKit
 
 final class CalculatorView: UIView {
-  
+
+  // MARK: - UI Components
+
   private let titleLabel: UILabel = {
     let label = UILabel()
     label.text = "환율 계산기"
@@ -17,29 +19,29 @@ final class CalculatorView: UIView {
     label.textColor = .label
     return label
   }()
-  
-  let countryCodeLabel: UILabel = {
+
+  private let countryCodeLabel: UILabel = {
     let label = UILabel()
     label.textColor = .label
     label.font = .systemFont(ofSize: 24, weight: .bold)
     return label
   }()
-  
-  let countryNameLabel: UILabel = {
+
+  private let countryNameLabel: UILabel = {
     let label = UILabel()
     label.textColor = .secondaryLabel
     label.font = .systemFont(ofSize: 16)
     return label
   }()
-  
-  lazy var labelStackView: UIStackView = {
+
+  private lazy var labelStackView: UIStackView = {
     let stack = UIStackView(arrangedSubviews: [countryCodeLabel, countryNameLabel])
     stack.alignment = .center
     stack.axis = .vertical
     stack.spacing = 4
     return stack
   }()
-  
+
   let amountTextField: UITextField = {
     let textField = UITextField()
     textField.textColor = .label
@@ -50,7 +52,7 @@ final class CalculatorView: UIView {
     textField.placeholder = "달러(USD)를 입력하세요"
     return textField
   }()
-  
+
   let convertButton: UIButton = {
     let button = UIButton(type: .system)
     button.backgroundColor = .systemBlue
@@ -60,7 +62,7 @@ final class CalculatorView: UIView {
     button.layer.cornerRadius = 8
     return button
   }()
-  
+
   let resultLabel: UILabel = {
     let label = UILabel()
     label.text = "계산 결과가 여기에 표시됩니다"
@@ -70,50 +72,57 @@ final class CalculatorView: UIView {
     label.numberOfLines = 0
     return label
   }()
-  
+
+  // MARK: - Init
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     configureUI()
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
+  // MARK: - UI Setup
+
   private func configureUI() {
     backgroundColor = .systemBackground
-    
+
     [titleLabel, labelStackView, amountTextField, convertButton, resultLabel].forEach {
       addSubview($0)
     }
-    
+
     titleLabel.snp.makeConstraints {
       $0.top.equalTo(safeAreaLayoutGuide)
       $0.leading.trailing.equalTo(safeAreaLayoutGuide).inset(16)
     }
-    
+
     labelStackView.snp.makeConstraints {
       $0.top.equalTo(titleLabel.snp.bottom).offset(32)
       $0.centerX.equalToSuperview()
     }
-    
+
     amountTextField.snp.makeConstraints {
       $0.top.equalTo(labelStackView.snp.bottom).offset(32)
       $0.leading.trailing.equalToSuperview().inset(24)
       $0.height.equalTo(44)
     }
-    
+
     convertButton.snp.makeConstraints {
       $0.top.equalTo(amountTextField.snp.bottom).offset(24)
       $0.leading.trailing.equalToSuperview().inset(24)
       $0.height.equalTo(44)
     }
-    
+
     resultLabel.snp.makeConstraints {
       $0.top.equalTo(convertButton.snp.bottom).offset(32)
       $0.leading.trailing.equalToSuperview().inset(24)
     }
   }
+
+  // MARK: - Public Methods
+
   public func configureLabelStack(code: String, name: String) {
     countryCodeLabel.text = code
     countryNameLabel.text = name

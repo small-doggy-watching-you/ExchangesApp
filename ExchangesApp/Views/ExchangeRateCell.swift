@@ -44,7 +44,7 @@ final class ExchangeRateCell: UITableViewCell {
   
   private let rateTrendLabel: UILabel = {
     let label = UILabel()
-    label.font = .systemFont(ofSize: 16)
+    label.font = .systemFont(ofSize: 14)
     label.textColor = .systemGreen
     return label
   }()
@@ -79,7 +79,7 @@ final class ExchangeRateCell: UITableViewCell {
     rateLabel.snp.makeConstraints {
       $0.centerY.equalToSuperview()
       $0.leading.greaterThanOrEqualTo(labelStackView.snp.trailing).inset(16)
-      $0.trailing.equalTo(rateTrendLabel.snp.leading).offset(-8)
+      $0.trailing.equalTo(rateTrendLabel.snp.leading).offset(-16)
       $0.width.equalTo(120)
     }
     
@@ -94,20 +94,19 @@ final class ExchangeRateCell: UITableViewCell {
     }
   }
   
-  public func configureCell(code: String, name: String, rate: Double, isFavorite: Bool, trend: RateTrend?) {
-    countryCodeLabel.text = code
-    countryNameLabel.text = name
-    rateLabel.text = String(format: "%.4f", rate)
-    
-    switch trend {
-    case .up: rateTrendLabel.text = "🔼"
-    case .down: rateTrendLabel.text = "🔽"
-    case .same: rateTrendLabel.text = "➖"
-    case .none: rateTrendLabel.text = ""
+  func configureCell(with item: CurrencyItem) {
+      countryCodeLabel.text = item.code
+      countryNameLabel.text = item.name
+      rateLabel.text = String(format: "%.4f", item.rate)
+
+      switch item.trend {
+      case .up: rateTrendLabel.text = "🔼"; rateTrendLabel.textColor = .systemRed
+      case .down: rateTrendLabel.text = "🔽"; rateTrendLabel.textColor = .systemBlue
+      case .same: rateTrendLabel.text = "➖"; rateTrendLabel.textColor = .gray
+      case .none: rateTrendLabel.text = ""
+      }
+
+      let imageName = item.isFavorite ? "star.fill" : "star"
+      favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
     }
-    
-    let imageName = isFavorite ? "star.fill" : "star"
-    favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
-  }
-  
 }

@@ -13,6 +13,6 @@ struct CurrencyItem {
   let code: String
   let name: String
   let rate: Double
-  var isFavorite: Bool = false
-  var trend: RateTrend? = nil
+  var isFavorite: Bool
+  var trend: RateTrend?
 }

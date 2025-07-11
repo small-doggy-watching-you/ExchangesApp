@@ -1,0 +1,97 @@
+//
+//  ExchangeRateServiceManager.swift
+//  ExchangesApp
+//
+//  Created by 김우성 on 7/11/25.
+//
+
+import Foundation
+
+final class ExchangeRateServiceManager {
+
+  private let exchangeRateService = ExchangeRateService()
+  private let currencyNameService = CurrencyNameService()
+  private let currencyStore = CurrencyStore()
+  private let favoriteStore = FavoriteStore()
+
+  // MARK: - 통화 이름 로드
+
+  func loadCurrencyNames(completion: @escaping (Result<Void, CurrencyError>) -> Void) {
+    currencyNameService.loadCurrencyNames { result in
+      switch result {
+      case .success(let names):
+        self.currencyNameService.currencyNames = names
+        completion(.success(()))
+      case .failure(let error):
+        completion(.failure(error))
+      }
+    }
+  }
+
+  // MARK: - 환율 데이터 로딩
+
+  func fetchExchangeRates(completion: @escaping (Result<[CurrencyItem], CurrencyError>) -> Void) {
+    exchangeRateService.fetchSortedRates { [weak self] result in
+      guard let self = self else { return }
+
+      switch result {
+      case .success(let sortedRates):
+        do {
+          let previousRates = try self.currencyStore.fetchRatesDictionary()
+          let items = sortedRates.map { code, rate -> CurrencyItem in
+            let name = self.currencyNameService.currencyNames[code] ?? "알 수 없음"
+            let trend = self.trend(from: previousRates[code], to: rate)
+            return CurrencyItem(code: code, name: name, rate: rate, isFavorite: false, trend: trend)
+          }
+          try self.currencyStore.saveAllCurrencies(items)
+          completion(.success(items))
+        } catch {
+          completion(.failure(.networkFailed(error)))
+        }
+
+      case .failure(let afError):
+        completion(.failure(.networkFailed(afError)))
+      }
+    }
+  }
+
+  private func trend(from old: Double?, to new: Double) -> RateTrend? {
+    guard let old = old else { return nil }
+    if new > old {
+      return .up
+    } else if new < old {
+      return .down
+    } else {
+      return .same
+    }
+  }
+
+  // MARK: - 즐겨찾기 동기화
+
+  func syncFavorites(to items: inout [CurrencyItem]) {
+    do {
+      let favoriteCodes = try favoriteStore.fetchFavorites()
+      items = items.map { item in
+        var updated = item
+        updated.isFavorite = favoriteCodes.contains(item.code)
+        return updated
+      }
+    } catch {
+      print("즐겨찾기 동기화 실패: \(error)")
+    }
+  }
+
+  // MARK: - 즐겨찾기 상태 토글
+
+  func toggleFavorite(for item: CurrencyItem) {
+    do {
+      if item.isFavorite {
+        try favoriteStore.addFavorite(item: item)
+      } else {
+        try favoriteStore.removeFavorite(code: item.code)
+      }
+    } catch {
+      print("즐겨찾기 저장 실패: \(error)")
+    }
+  }
+}
