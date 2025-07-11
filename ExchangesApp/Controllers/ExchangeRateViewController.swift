@@ -34,6 +34,7 @@ final class ExchangeRateViewController: UIViewController {
     exchangeRateView.searchBar.delegate = self
   }
   
+  /// 뷰모델에서 상태가 변경될 때 뷰릉 갱신하도록 바인딩
   private func bindViewModel() {
     viewModel.onStateChanged = { [weak self] state in
       guard let self else { return }
@@ -43,10 +44,12 @@ final class ExchangeRateViewController: UIViewController {
     }
   }
   
+  /// 현재 상태에 따라 표시할 목록을 반환 (필터링 여부 반영)
   private func currentItems(from state: ExchangeRateViewModel.State) -> [CurrencyItem] {
     state.isFiltering ? viewModel.filteredItems : state.items
   }
   
+  /// 섹션 번호에 따라 즐겨찾기 / 전체 목록을 반환
   private func sectionItems(for section: Int) -> [CurrencyItem] {
     let state = viewModel.state
     let items = currentItems(from: state)
@@ -54,11 +57,13 @@ final class ExchangeRateViewController: UIViewController {
     return section == 0 ? favorites : items
   }
   
+  /// 특정 indexPath에 해당하는 CurrencyItem을 반환
   private func item(at indexPath: IndexPath) -> CurrencyItem? {
     let items = sectionItems(for: indexPath.section)
     return indexPath.row < items.count ? items[indexPath.row] : nil
   }
   
+  /// 특정 indexPath에 해당하는 아이템이 전체 리스트에서 몇 번째인지 찾아 반환
   private func flatIndex(for indexPath: IndexPath) -> Int? {
     let stateItems = currentItems(from: viewModel.state)
     guard let item = item(at: indexPath),
@@ -66,6 +71,7 @@ final class ExchangeRateViewController: UIViewController {
     return index
   }
   
+  /// 별 버튼이 눌렸을 때 해당 항목의 즐겨찾기 상태를 토글
   @objc private func handleFavoriteTapped(_ sender: UIButton) {
     guard let indexPath = exchangeRateView.indexPath(for: sender),
           let item = item(at: indexPath) else { return }
@@ -74,6 +80,7 @@ final class ExchangeRateViewController: UIViewController {
 }
 
 extension ExchangeRateViewController: UITableViewDataSource {
+  
   func numberOfSections(in tableView: UITableView) -> Int { 2 }
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
