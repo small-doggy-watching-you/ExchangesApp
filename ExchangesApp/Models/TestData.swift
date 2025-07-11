@@ -1,7 +1,7 @@
 import Foundation
 
 enum TestData {
-    static var testCurrencyDataCopy: Currency { // 동일
+    static var testCurrencyDataCopy: Currency { // 해당날짜에 파싱한 원본 데이터
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         formatter.locale = Locale(identifier: "en_US_POSIX")
@@ -15,7 +15,7 @@ enum TestData {
         )
     }
 
-    static var testCurrencyDummy: Currency { // 변조
+    static var testCurrencyDummy: Currency { // 더미데이터
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         formatter.locale = Locale(identifier: "en_US_POSIX")

@@ -97,14 +97,14 @@ class CurrencyListTableViewCell: UITableViewCell {
         countryLabel.text = item.countryName
 
         // 상승하락 심볼
-        if item.trendSymbol == .blank {
+        if item.trendSymbol == .blank { // 상승 하락 버튼이 없으면
             let trendConfiguration = UIImage.SymbolConfiguration(pointSize: 20)
             trendImageView.image = UIImage(systemName: item.trendSymbol.rawValue, withConfiguration: trendConfiguration)
-            trendImageView.isHidden = true
-        } else {
+            trendImageView.isHidden = true // 크기는 유지하되 히든
+        } else { // 상승 하락 버튼이 있으면
             let trendConfiguration = UIImage.SymbolConfiguration(pointSize: 20).applying(UIImage.SymbolConfiguration(paletteColors: [.white, .systemBlue]))
             trendImageView.image = UIImage(systemName: item.trendSymbol.rawValue, withConfiguration: trendConfiguration)
-            trendImageView.isHidden = false
+            trendImageView.isHidden = false // 위치가 바뀌니까 히든 해제해야함
         }
 
         // 즐겨찾기 버튼 별 모양 판정
