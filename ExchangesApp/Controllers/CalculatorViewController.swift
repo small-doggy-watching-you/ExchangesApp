@@ -10,10 +10,10 @@ import UIKit
 final class CalculatorViewController: UIViewController {
 
   private let calculatorView = CalculatorView()
-  private let currencyItem: CurrencyItem
+  private let calculatorViewModel: CalculatorViewModel
 
   init(item: CurrencyItem) {
-    self.currencyItem = item
+    calculatorViewModel = .init(currencyItem: item)
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -25,9 +25,13 @@ final class CalculatorViewController: UIViewController {
     super.viewDidLoad()
     print("calculatorViewDidLoad")
     
+    calculatorViewModel.onStateChanged = { [weak self] state in
+      self?.updateView(state: state)
+    }
+    
     setupView()
     setupActions()
-    configureView()
+    updateView(state: calculatorViewModel.state)
   }
   
   override func viewWillDisappear(_ animated: Bool) {
@@ -36,6 +40,11 @@ final class CalculatorViewController: UIViewController {
     if self.isMovingFromParent { // 네비게이션 스택에서 pop되어 사라지고 있는 중일 때
       try? AppStateStore().saveLastScreenState(screen: "list", item: nil)
     }
+  }
+  
+  private func updateView(state: CalculatorViewModel.State) {
+    calculatorView.resultLabel.text = String(format: "%.2f", state.result)
+    calculatorView.configureLabelStack(code: state.currencyItem.code, name: state.currencyItem.name)
   }
 
   private func setupView() {
@@ -48,18 +57,13 @@ final class CalculatorViewController: UIViewController {
     calculatorView.convertButton.addTarget(self, action: #selector(handleCalculate), for: .touchUpInside)
   }
 
-  private func configureView() {
-    calculatorView.configureLabelStack(code: currencyItem.code, name: currencyItem.name)
-  }
-
   @objc private func handleCalculate() {
     guard let input = calculatorView.amountTextField.text,
           let number = Double(input) else {
       calculatorView.resultLabel.text = "올바른 숫자를 입력하세요."
       return
     }
-
-    let result = number * currencyItem.rate
-    calculatorView.resultLabel.text = String(format: "%.2f", result)
+    calculatorViewModel.action(.calculate(number))
+    
   }
 }
