@@ -5,6 +5,7 @@ import SnapKit
 import Then
 
 class CurrencyListViewController: UIViewController {
+    
     // 객체 생성
     private let viewModel = CurrencyListViewModel()
 
@@ -34,6 +35,14 @@ class CurrencyListViewController: UIViewController {
         viewModel.action(.fetchdata)
 
         configureUI() // UI생성
+        
+        // 마지막 저장화면으로 이동
+        viewModel.onAutoNavigate = { [weak self] item in
+            guard let self else { return }
+            let calculatorVC = CalculatorViewController(currencyItem: item)
+            self.navigationController?.setViewControllers([self, calculatorVC], animated: false)
+        }
+        
 
         // 데이터 변화 감지 시 테이블 뷰 리로드
         viewModel.onStateChanged = { [weak self] _ in
@@ -50,6 +59,13 @@ class CurrencyListViewController: UIViewController {
                 self.presentErrorAlert(message: ErrorMessageProvider.message(for: error))
             }
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // 자동 이동 중이 아닐 때만 저장
+        guard navigationController?.topViewController === self else { return }
+        CoreDataManager.shared.saveLastScrren(screenType: LastScreenType.list.rawValue, currencyCode: nil)
     }
 
     // 에러 출력 함수
@@ -106,7 +122,7 @@ extension CurrencyListViewController: UITableViewDelegate, UITableViewDataSource
     // 어떤 데이터를 넣을 것인지 정의
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = viewModel.state.sortedItems[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CurrencyListTableViewCell", for: indexPath) as! CurrencyListTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: CurrencyListTableViewCell.id, for: indexPath) as! CurrencyListTableViewCell
         cell.configureCell(item) // 셀 생성
         // 셀에서 즐겨찾기 버튼이 눌리면 뷰모델의 토글함수 실행 클로저
         cell.onFavoriteTapped = { [viewModel] in
@@ -127,6 +143,13 @@ extension CurrencyListViewController: UITableViewDelegate, UITableViewDataSource
         let calculatorVC = CalculatorViewController(currencyItem: item)
         navigationController?.pushViewController(calculatorVC, animated: true)
     }
+    
+    @objc private func handleAutoNavigate(_ notification: Notification) {
+        guard let item = notification.object as? CurrencyItem else { return }
+        let calculatorVC = CalculatorViewController(currencyItem: item)
+        navigationController?.setViewControllers([self, calculatorVC], animated: false)
+    }
+
 }
 
 // 서치 바 Delegate

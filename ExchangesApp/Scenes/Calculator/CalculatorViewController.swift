@@ -44,6 +44,12 @@ class CalculatorViewController: UIViewController {
             present(alert, animated: true)
         }
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // 마지막 화면 저장
+        CoreDataManager.shared.saveLastScrren(screenType: LastScreenType.calcuator.rawValue, currencyCode: viewModel.state.currencyItem.code)
+    }
 
     // 뷰모델을 바라보는 요소들을 업데이트
     func updateUI(_ state: CalculatorViewModel.State) {

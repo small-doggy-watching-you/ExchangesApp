@@ -9,4 +9,8 @@
     <entity name="FavoriteCurrency" representedClassName="FavoriteCurrency" syncable="YES">
         <attribute name="code" optional="YES" attributeType="String"/>
     </entity>
+    <entity name="LastScreen" representedClassName="LastScreen" syncable="YES">
+        <attribute name="currencyCode" optional="YES" attributeType="String"/>
+        <attribute name="screenType" optional="YES" attributeType="String"/>
+    </entity>
 </model>
