@@ -5,8 +5,7 @@
 //  Created by 김우성 on 7/7/25.
 //
 
-// mvvm에서 뷰는 로직이 없어야 되고, 뷰모델은 UIKit이 없어야 한다.
-// loadView() 쓰는거 이상하다는 재성튜터님의 조언이 있었다고 한다. mvvm으로 바꿀 때 고치자
+// View (View+Controller) 는 보여주는 것만
 
 import UIKit
 

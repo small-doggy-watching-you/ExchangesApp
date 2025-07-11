@@ -5,6 +5,8 @@
 //  Created by 김우성 on 7/9/25.
 //
 
+// View (View+Controller) 는 보여주는 것만
+
 import UIKit
 
 final class CalculatorViewController: UIViewController {
@@ -42,11 +44,6 @@ final class CalculatorViewController: UIViewController {
     }
   }
   
-  private func updateView(state: CalculatorViewModel.State) {
-    calculatorView.resultLabel.text = String(format: "%.2f", state.result)
-    calculatorView.configureLabelStack(code: state.currencyItem.code, name: state.currencyItem.name)
-  }
-
   private func setupView() {
     view.backgroundColor = .systemBackground
     view.addSubview(calculatorView)
@@ -56,6 +53,11 @@ final class CalculatorViewController: UIViewController {
   private func setupActions() {
     calculatorView.convertButton.addTarget(self, action: #selector(handleCalculate), for: .touchUpInside)
   }
+  
+  private func updateView(state: CalculatorViewModel.State) {
+    calculatorView.resultLabel.text = String(format: "%.2f", state.result)
+    calculatorView.configureLabelStack(code: state.currencyItem.code, name: state.currencyItem.name)
+  }
 
   @objc private func handleCalculate() {
     guard let input = calculatorView.amountTextField.text,
@@ -64,6 +66,5 @@ final class CalculatorViewController: UIViewController {
       return
     }
     calculatorViewModel.action(.calculate(number))
-    
   }
 }
