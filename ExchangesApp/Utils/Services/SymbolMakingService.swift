@@ -12,6 +12,7 @@ enum SymbolMakingService {
         case blank = "square" // 빈칸용 네모
     }
 
+    // 상승 하락 심볼 결정 함수
     static func allocateTrendSymbol(oldRate: Double?, newRate: Double) -> TrendSymbol {
         guard let oldRate else { return .blank }
         let changed = newRate - oldRate

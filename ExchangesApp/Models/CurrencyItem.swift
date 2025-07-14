@@ -9,9 +9,9 @@ class CurrencyItem {
         self.trendSymbol = trendSymbol
     }
 
-    let code: String
-    let rate: Double
-    let countryName: String
-    var isFavorited: Bool = false
-    let trendSymbol: SymbolMakingService.TrendSymbol
+    let code: String // 통화 코드
+    let rate: Double // 환율
+    let countryName: String // 국가명
+    var isFavorited: Bool = false // 즐겨찾기 등록여부
+    let trendSymbol: SymbolMakingService.TrendSymbol // 뷰에서 사용할 심볼정보
 }
