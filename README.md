@@ -81,21 +81,31 @@ CurrencyModel : 이 어플리케이션용 Data Model
 
 ## Scenes
 `Calculator`
+
     - CalculatorView : 계산기 화면의 뷰 요소(고정값)
+    
     - CalculatorViewController : 계산기 화면의 뷰 컨트롤러, 제어 + 뷰모델에 바인딩되는 뷰 요소
+    
     - CalculatorViewModel : 계산기 화면의 뷰 모델
 
 `CurrencyList`
+
     - CurrencyListTableViewCell : 테이블 뷰 셀
-│   - CurrencyListViewController : 통화목록 뷰 컨트롤러 + 뷰 요소
-│   - CurrencyListViewModel : 통화목록 뷰 모델
+    
+    - CurrencyListViewController : 통화목록 뷰 컨트롤러 + 뷰 요소
+    
+    - CurrencyListViewModel : 통화목록 뷰 모델
 
 ## Utils
 
 `Extension`
-    미사용
+
+    - 현재 구현상으로는 미사용
 
 `Services`
+
     - AlertFatcory : 에러 창 정의와 JSON 파싱 에러메시지 열거형 보관
+    
     - DataService : Alamofire로 JSON 파싱
+    
     - SymbolMakingService : 뷰에서 사용할 심볼 데이터를 할당
