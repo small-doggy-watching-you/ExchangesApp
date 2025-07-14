@@ -59,11 +59,41 @@ class CalculatorViewController: UIViewController {
     }
 
     // 좌우 공백 제거, 향후 regExp기반으로 변경처리
-    func trimmedInputText(_ inputText: String) {
+    func modifyInputText(_ inputText: String) {
+        // 복사 등으로 딸려오는 공백 제거
         let trimmed = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
-        // TODO: 정규식 또는 루프 활용 자동수정(시간이 남으면)
-//        let filtered = trimmed.replacingOccurrences(of: "[^0-9.]", with: "", options: .regularExpression)
-        calculatorView.amountTextField.text = trimmed
+
+        // 첫번째가 숫자나 소수점이 아닌경우 빈 텍스트로 변경
+        guard let first = trimmed.first, first.isNumber || first == "." else {
+            calculatorView.amountTextField.text = ""
+            return
+        }
+
+        // 정상적인 입력까지 값 획득
+        var result = ""
+        var hasDot = false
+        for char in trimmed {
+            if char.isNumber {
+                result.append(char)
+            } else if char == "." {
+                if hasDot { break } // 소숫점은 하나만 허용
+                result.append(char)
+                hasDot = true
+            } else { // 예외가 발생하면 그 뒤 값은 전부 파기
+                break
+            }
+        }
+
+        if result.last == "." { // 마지막이 소숫점일 경우 .00으로 변경
+            result = result + "00"
+        }
+
+        if result.first == "." { // .12 -> 0.12
+            result = "0" + result
+        }
+
+        // 정상적으로 입력된 값을 필드에 반환
+        calculatorView.amountTextField.text = result
     }
 
     // 변환 버튼 액션
@@ -71,7 +101,7 @@ class CalculatorViewController: UIViewController {
     func convertButtonTapped() {
         let inputText = calculatorView.amountTextField.text ?? ""
         viewModel.action(.currencyExchange(inputText))
-        trimmedInputText(inputText)
+        modifyInputText(inputText)
     }
 
     @available(*, unavailable)
