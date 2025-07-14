@@ -50,6 +50,14 @@ class CurrencyListViewController: UIViewController {
             }
         }
 
+        // 키보드가 딸려올라와야되면 Notification 사용
+//        NotificationCenter.default.addObserver(
+//            self,
+//            selector: #selector(keyboardwillChangeFrame),
+//            name: UIResponder.keyboardWillChangeFrameNotification,
+//            object: nil
+//        )
+
         // 에러 발생 감지
         viewModel.onError = { [weak self] error in
             guard let self else { return }
@@ -98,7 +106,12 @@ class CurrencyListViewController: UIViewController {
 
         tableView.snp.makeConstraints {
             $0.top.equalTo(searchBar.snp.bottom)
-            $0.leading.trailing.bottom.equalToSuperview() // 과제 제약조건보다 자연스럽게 설정
+            $0.leading.trailing.equalToSuperview() // 과제 제약조건보다 자연스럽게 설정
+            $0.bottom.equalTo(view.keyboardLayoutGuide.snp.top)
+        }
+
+        if #available(iOS 17.0, *) {
+            view.keyboardLayoutGuide.usesBottomSafeArea = false
         }
 
         emptyLabel.snp.makeConstraints {
@@ -114,6 +127,14 @@ class CurrencyListViewController: UIViewController {
         tableView.reloadData()
         emptyLabel.isHidden = viewModel.state.numberOfItems != 0 // 검색결과 0개일 경우 false로 변경
     }
+
+    // Notification 사용한다면 이런식으로 해줘야 함
+//    @objc
+//    private func keyboardwillChangeFrame(_ notification: Notification) {
+//        UIView.animate(withDuration: 0.3) {
+//            self.view.layoutIfNeeded()
+//        }
+//    }
 }
 
 extension CurrencyListViewController: UITableViewDelegate, UITableViewDataSource {
@@ -146,6 +167,11 @@ extension CurrencyListViewController: UITableViewDelegate, UITableViewDataSource
         guard let item = notification.object as? CurrencyItem else { return }
         let calculatorVC = CalculatorViewController(currencyItem: item)
         navigationController?.setViewControllers([self, calculatorVC], animated: false)
+    }
+
+    // 스크롤바를 움직이면 키보드 내리기
+    func scrollViewWillBeginDragging(_: UIScrollView) {
+        view.endEditing(true)
     }
 }
 
